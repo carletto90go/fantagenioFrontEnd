@@ -31,7 +31,7 @@
         },
         methods: {
             login() {
-                console.log(this.input.username);
+              //  console.log(this.input.username);
                 if(this.input.username != "" && this.input.password != "") {
                     let currentObj = this;
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
@@ -42,8 +42,8 @@
                         }
                     })
                     .then(function (response) {
-                   //    this.output = response.data;
-                        console.log(response.data);
+                      this.output = response.data;
+                  //      console.log(response.data);
                    //      this.$emit("authenticated", true);
                          currentObj.$router.replace({ name: "bet" });
                     })
@@ -51,7 +51,7 @@
                      currentObj.input.output = error;
                     });
                 } else {
-                        console.log("The username and / or password is incorrect");
+                    //    console.log("The username and / or password is incorrect");
                     }
             }
         }
