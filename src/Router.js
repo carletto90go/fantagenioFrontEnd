@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginComponent from "./components/Login.vue"
-import betComponent from "./bet.vue"
-
+import betComponent from "./components/bet.vue"
+import alertComponent from "./components/alert.vue"
 Vue.use(Router)
 
 export default new Router({
@@ -22,6 +22,11 @@ export default new Router({
             path: "/bet",
             name: "bet",
             component: betComponent
+        },
+        {
+            path: "/alert",
+            name: "alert",
+            component: alertComponent
         }
     ]
 })

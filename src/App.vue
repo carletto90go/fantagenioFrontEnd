@@ -34,22 +34,19 @@
         }
     }
 </script>
-/* script per mostrare componente Login RICORDA DI ATTIVARLO NEL HTML //  <Login/>
 <script>
-import Login from './components/Login.vue'
+/* import Login from './components/Login.vue'
 
 export default {
    name: 'app',
    components: {
      Login
    }
- }
+ } */
 </script>
-*/
-
 <style>
-#app {
-   background: #76b852; /* fallback for old browsers */
+ #app {
+   background: #76b852; 
    background: -webkit-linear-gradient(right, #525eb8, #6fa1c2);
    background: -moz-linear-gradient(right, #525eb8, #6fa1c2);
    background: -o-linear-gradient(right, #525eb8, #6fa1c2);
@@ -58,7 +55,8 @@ export default {
    -webkit-font-smoothing: antialiased;
    -moz-osx-font-smoothing: grayscale;
 }
-body {
+ body {
     background: -webkit-linear-gradient(right, #525eb8, #6fa1c2);
-}
+} 
+
 </style>

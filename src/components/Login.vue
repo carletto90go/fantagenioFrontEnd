@@ -1,8 +1,8 @@
 <template>
-    <div  id="login" class="login-page">
-    <div>
-        <b-alert show variant="danger">Danger Alert</b-alert>
-    </div>
+    <div id="login">
+      
+      <b-alert variant="danger" :show="input.showAlert">Username o Password errati</b-alert>
+     
         <h1 class="titolo">Benvenuto su Fantagenio!</h1>
     <div class="form">
         <form class="login-form">
@@ -11,7 +11,7 @@
             <button type="button" v-on:click="login()">login</button>
         </form>
         <pre>
-        {{output}}
+        {{input.output}}
         </pre>
     </div>
     </div>
@@ -25,13 +25,13 @@
                 input: {
                     username: "carlo",
                     password: "manu19",
-                    output: ""
+                    output: "",
+                    showAlert: false
                 }
             }
         },
         methods: {
             login() {
-              //  console.log(this.input.username);
                 if(this.input.username != "" && this.input.password != "") {
                     let currentObj = this;
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
@@ -42,16 +42,19 @@
                         }
                     })
                     .then(function (response) {
-                      this.output = response.data;
-                  //      console.log(response.data);
+                      console.log(response);
+                      currentObj.output = response.data;
                    //      this.$emit("authenticated", true);
-                         currentObj.$router.replace({ name: "bet" });
+                        currentObj.$router.replace({ name: "bet" });
                     })
                     .catch(function (error) {
+                      console.log(currentObj.input.showAlert);
+                     currentObj.input.showAlert = true;
+                     console.log(currentObj.input.showAlert);                    
                      currentObj.input.output = error;
                     });
                 } else {
-                    //    console.log("The username and / or password is incorrect");
+                   currentObj.input.showAlert = true; //    console.log("The username and / or password is incorrect");
                     }
             }
         }
@@ -59,9 +62,7 @@
 
 
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+ <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
 .login-page {
@@ -167,5 +168,6 @@
   cursor: pointer;
   text-align: center;
 }
-
+ 
 </style>
+ 

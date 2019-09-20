@@ -1,6 +1,6 @@
 <template>
     <div id="bet">
-        <b-alert show variant="danger">Danger Alert</b-alert>
+        
         <h1>qui si betta</h1>
         <p>
         Tab scommessa qui
