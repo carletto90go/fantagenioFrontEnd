@@ -1,10 +1,10 @@
 <template>
     <div id="bet">
         
-        <h1>qui si betta</h1>
-        <p>
-        Tab scommessa qui
-        </p>
+        <h1>Giornata Numero {{numeroGiornata}}</h1>
+        <div>
+              <b-table striped hover :items="items" :fields="fields"></b-table>
+        </div>
     </div>
 </template>
 
@@ -12,13 +12,39 @@
     export default {
         name: 'bet',
         data() {
-            return {};
+            return {
+                  fields: [
+          {
+            key: 'homeTeam',
+            sortable: false
+          },
+          {
+            key: 'awayTeam',
+            sortable: false
+          },
+          {
+            key: 'homeResult',
+            label: 'Risultato Casa'
+          },
+          {
+            key: 'awayResult',
+            label: 'Risultato Ospite'
+          },
+          {
+            key: 'result',
+            label: 'Risultato 1X2'
+          }
+        ],
+        items: [
+          { homeTeam: 'inter', awayTeam: 'Rubentus', homeResult: '',awayResult:'',result:''  },
+        ]
+            };
         }
     }
 </script>
 
 <style scoped>
-    #secure {
+    #bet {
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
         padding: 20px;
