@@ -1,10 +1,10 @@
 <template>
     <div id="app">
-
+        <button type="button" v-on:click="logout()" >DISCONNETTI</button>
     <div id="nav">
-        <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>
+        <!-- <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>   -->
     </div>
-        <router-view @authenticated="setAuthenticated" />
+         <router-view @authenticated="setAuthenticated" />
     </div>
 </template>
 <script>
@@ -19,17 +19,21 @@
                 }
             }
         },
-        mounted() {
-            if(!this.authenticated) {
-                this.$router.replace({ name: "login" });
-            }
-        },
+        
         methods: {
+         /*    mounted() {
+            if(this.authenticated) {
+                this.$router.replace({ name: "login" });
+            }}, */
+        
             setAuthenticated(status) {
                 this.authenticated = status;
             },
-            logout() {
-                this.authenticated = false;
+            logout: function() {
+              if( this.authenticated == false){
+                this.$router.replace({ name: "login" });
+              }
+               
             }
         }
     }
