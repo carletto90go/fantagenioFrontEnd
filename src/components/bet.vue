@@ -1,10 +1,13 @@
 <template>
     <div id="bet">
-        
+        <button type="button" v-on:click="logout()" >DISCONNETTI</button>
         <h1>Giornata Numero {{numeroGiornata}}</h1>
         <div>
               <b-table striped hover :items="items" :fields="fields"></b-table>
         </div>
+        <!-- <pre>
+          {{this.authenticated}}
+        </pre> -->
     </div>
 </template>
 
@@ -13,6 +16,7 @@
         name: 'bet',
         data() {
             return {
+              numeroGiornata: 1,
                   fields: [
           {
             key: 'homeTeam',
@@ -39,7 +43,15 @@
           { homeTeam: 'inter', awayTeam: 'Rubentus', homeResult: '',awayResult:'',result:''  },
         ]
             };
+        },
+        methods:{
+                 logout: function() {
+               
+                this.$router.replace({ name: "login" });
+              
+            }
         }
+     
     }
 </script>
 

@@ -1,10 +1,10 @@
 <template>
     <div id="app">
-        <button type="button" v-on:click="logout()" >DISCONNETTI</button>
-    <div id="nav">
+        <div id="nav">
         <!-- <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout</router-link>   -->
-    </div>
-         <router-view @authenticated="setAuthenticated" />
+        </div>
+         <router-view @authenticated="getAuthenticated()" /> 
+         
     </div>
 </template>
 <script>
@@ -26,12 +26,16 @@
                 this.$router.replace({ name: "login" });
             }}, */
         
-            setAuthenticated(status) {
+            setAuthenticated: function(status) {
                 this.authenticated = status;
+            },
+            getAuthenticated: function(){
+                console.log(this.authenticated);
+                return this.authenticated;
             },
             logout: function() {
               if( this.authenticated == false){
-                this.$router.replace({ name: "login" });
+                this.router.replace({ name: "login" });
               }
                
             }
