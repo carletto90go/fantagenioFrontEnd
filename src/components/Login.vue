@@ -50,7 +50,7 @@
                     .catch(function (error) {
                       console.log(currentObj.input.showAlert);
                      currentObj.input.showAlert = true;
-                     console.log(currentObj.input.showAlert);                    
+                     console.log(currentObj.input.showAlert);
                      currentObj.input.output = error;
                     });
                 } else {
@@ -59,12 +59,9 @@
             }
         }
     }
-
-
 </script>
  <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
 .login-page {
   width: 360px;
   padding: 8% 0 0;
@@ -168,6 +165,5 @@
   cursor: pointer;
   text-align: center;
 }
- 
+
 </style>
- 

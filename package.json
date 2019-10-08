@@ -54,5 +54,17 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "description": "```\r npm install\r ```",
+  "main": "/assets/index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carletto90go/fantagenioFrontEnd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/carletto90go/fantagenioFrontEnd/issues"
+  },
+  "homepage": "https://github.com/carletto90go/fantagenioFrontEnd#readme"
 }
