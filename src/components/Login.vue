@@ -1,5 +1,5 @@
 <template>
-    <div id="login">
+    <div id="login" >
       
       <b-alert variant="danger" :show="input.showAlert">Username o Password errati</b-alert>
      
@@ -10,9 +10,6 @@
             <input type="password" name="password" v-model="input.password" placeholder="Inserisci password"/>
             <button type="button" v-on:click="login()">login</button>
         </form>
-        <pre>
-        {{input.output}}
-        </pre>
     </div>
     </div>
 </template>
@@ -30,10 +27,17 @@
                 }
             }
         },
+        mounted() {
+            console.log(this.ciao);
+            if(localStorage.getItem("jwt")){
+                //eslint-disable-next-line
+                console.log("Redirecting...");
+                this.$router.replace({ name : "bet" });
+                }
+        },
         methods: {
             login() {
                 if(this.input.username != "" && this.input.password != "") {
-                    let currentObj = this;
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
                     {
                         "request":{
@@ -41,30 +45,25 @@
                             password: this.input.password
                         }
                     })
-                    .then(function (response) {
+                    .then( response => {
+                    //eslint-disable-next-line
                       console.log(response);
-                      currentObj.output = response.data;
-                   //      this.$emit("authenticated", true);
-                        currentObj.$router.replace({ name: "bet" });
+                      localStorage.setItem("jwt", response.data);
+                      this.$router.replace({ name: "bet" });
                     })
                     .catch(function (error) {
-                      console.log(currentObj.input.showAlert);
-                     currentObj.input.showAlert = true;
-                     console.log(currentObj.input.showAlert);                    
-                     currentObj.input.output = error;
+                    //eslint-disable-next-line
+                     console.log(error);
                     });
                 } else {
-                   currentObj.input.showAlert = true; //    console.log("The username and / or password is incorrect");
+                   this.input.showAlert = true; //    console.log("The username and / or password is incorrect");
                     }
             }
         }
     }
-
-
 </script>
  <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
 .login-page {
   width: 360px;
   padding: 8% 0 0;
@@ -168,6 +167,5 @@
   cursor: pointer;
   text-align: center;
 }
- 
+
 </style>
- 
