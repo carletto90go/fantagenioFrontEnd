@@ -100,11 +100,13 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
             invioDati(){
                 // fare post
                 for(let i=0; i<10; i++){
-                    this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
-                    this.templatePostMatches[i].homeGoals = this.correctResult[i][0];
-                    this.templatePostMatches[i].awayGoals = this.correctResult[i][1];
-                    this.postMatches.request.push(this.templatePostMatches[i]);
-                }
+                    if(this.bet1x2[i] && this.correctResult[i]) {
+                        this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
+                        this.templatePostMatches[i].homeGoals = this.correctResult[i][0];
+                        this.templatePostMatches[i].awayGoals = this.correctResult[i][1];
+                        this.postMatches.request.push(this.templatePostMatches[i]);
+                        }
+                    }
                 const jwt = localStorage.getItem("jwt");
                 console.log(this.postMatches.request);
                 const options = {
