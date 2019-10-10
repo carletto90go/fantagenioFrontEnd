@@ -1,18 +1,17 @@
 <template>
-    <div id="login">
-      
+    <div id="login" >
       <b-alert variant="danger" :show="input.showAlert">Username o Password errati</b-alert>
-     
-        <h1 class="titolo">Benvenuto su Fantagenio!</h1>
+    <div>
+      <h1 class="titolo">Benvenuto su Fantagenio!</h1>
+    </div>
     <div class="form">
-        <form class="login-form">
-            <input type="text" name="username" v-model="input.username" placeholder="Inserisci username"/>
-            <input type="password" name="password" v-model="input.password" placeholder="Inserisci password"/>
-            <button type="button" v-on:click="login()">login</button>
-        </form>
-        <pre>
-        {{input.output}}
-        </pre>
+    <b-form  @submit.stop.prevent>
+            <label>Username:</label>
+            <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
+            <label for="text-password">Password:</label>
+            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
+            <b-button type="button" size="lg" v-on:click="login()">Accedi</b-button>
+    </b-form>
     </div>
     </div>
 </template>
@@ -30,10 +29,17 @@
                 }
             }
         },
+        mounted() {
+            console.log(this.ciao);
+            if(localStorage.getItem("jwt")){
+                //eslint-disable-next-line
+                console.log("Redirecting...");
+                this.$router.replace({ name : "bet" });
+                }
+        },
         methods: {
             login() {
                 if(this.input.username != "" && this.input.password != "") {
-                    let currentObj = this;
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
                     {
                         "request":{
@@ -41,20 +47,18 @@
                             password: this.input.password
                         }
                     })
-                    .then(function (response) {
+                    .then( response => {
+                    //eslint-disable-next-line
                       console.log(response);
-                      currentObj.output = response.data;
-                   //      this.$emit("authenticated", true);
-                        currentObj.$router.replace({ name: "bet" });
+                      localStorage.setItem("jwt", response.data);
+                      this.$router.replace({ name: "bet" });
                     })
                     .catch(function (error) {
-                      console.log(currentObj.input.showAlert);
-                     currentObj.input.showAlert = true;
-                     console.log(currentObj.input.showAlert);
-                     currentObj.input.output = error;
+                    //eslint-disable-next-line
+                     console.log(error);
                     });
                 } else {
-                   currentObj.input.showAlert = true; //    console.log("The username and / or password is incorrect");
+                   this.input.showAlert = true; //    console.log("The username and / or password is incorrect");
                     }
             }
         }
@@ -155,7 +159,7 @@
   text-transform: uppercase;
   outline: 0;
   background: #525eb8;
-  width: 90%;
+  width: 100%;
   border: 0;
   padding: 15px;
   color: #FFFFFF;

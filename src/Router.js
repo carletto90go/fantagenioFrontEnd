@@ -5,7 +5,7 @@ import betComponent from "./components/bet.vue"
 import alertComponent from "./components/alert.vue"
 Vue.use(Router)
 
-export default new Router({
+let router =  new Router({
     routes: [
         {
             path: '/',
@@ -21,7 +21,10 @@ export default new Router({
         {
             path: "/bet",
             name: "bet",
-            component: betComponent
+            component: betComponent,
+            meta: {
+                loggedIn : true
+            }
         },
         {
             path: "/alert",
@@ -30,3 +33,5 @@ export default new Router({
         }
     ]
 })
+
+export default router
