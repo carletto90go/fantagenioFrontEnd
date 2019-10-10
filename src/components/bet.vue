@@ -1,55 +1,59 @@
 <template>
     <div id="bet">
         <div>
-        <b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button>
-        </div>
-        <div>
+  <b-card title="Card Title" no-body>
+    <b-card-header header-tag="nav">
+      <b-nav>
+        <b-nav-item active>Scommessa</b-nav-item>
+        <b-nav-item>Classifica</b-nav-item>
+        <b-nav-item>Giornata precedente</b-nav-item>
+        <b-nav-item ><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
+      </b-nav>
+    </b-card-header>
+
+    <b-card-body class="text-center">
+      <b-card-text>
+            <div>
         <h1>Giornata Numero {{numeroGiornata}}</h1>
         </div>
         <div>
               <b-table striped hover responsive :items="getMatch" :fields="fields">
                 <template v-slot:cell(correctResult)="row">
-                  <b-form-select v-model="result" :options="optionsCorrectResult" size="sm" class="mt-3"></b-form-select>
+                     <inputCompCorrectResult :parentIndex="row.index" @listenerInputCorrectResult="inputCorrectResultFun" />
                 </template>
                 <template v-slot:cell(bet1x2)="row">
-                  <b-form-select v-model="bet1x2" :options="optionsBet1x2" size="sm" class="mt-3"></b-form-select>
+                     <inputComp1x2 :parentIndex="row.index" @listenerInput1x2="input1x2Fun" />
                 </template>
               </b-table>
         </div>
         <div>
         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
         </div>
+      </b-card-text>
+
+      
+    </b-card-body>
+  </b-card>
+</div>
+        <b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button>
+        
+    
     </div>
 </template>
-
 <script>
+import inputComp1x2 from './input1X2.vue';
+import inputCompCorrectResult from './inputCorrectResult.vue';
+
     export default {
         name: 'bet',
+        components: {
+            inputComp1x2,
+            inputCompCorrectResult
+        },
         data() {
             return {
-                result: null,
-                optionsCorrectResult: [
-                { value: null, text: 'Inserire risultato' },
-                { value: '1', text: '0-0' },
-                { value: '2', text: '1-0' },
-                { value: '3', text: '1-1' },
-                { value: '4', text: '2-2' },
-                { value: '5', text: '2-1' },
-                { value: '6', text: '2-0' },
-                { value: '7', text: '1-2' },
-                { value: '8', text: '0-2' },
-                { value: '9', text: '3-0' },
-                { value: '10', text: '0-3' },
-                { value: '11', text: '1-3' },
-                { value: '12', text: '3-1' },
-        ],
-                bet1x2: null,
-                optionsBet1x2: [
-                { value: null, text: 'Inserire risultato esatto' },
-                { value: 'a', text: '1' },
-                { value: 'b', text: '2' },
-                { value: 'c', text: 'X' },
-        ],
+                correctResult: [],
+                bet1x2: [],
 
                 numeroGiornata: null, 
                 fields: [
@@ -79,12 +83,22 @@
         },
 
         methods: {
+            input1x2Fun: function(dataFun){
+              this.bet1x2[dataFun.index] = dataFun.inputBet;
+
+            },
+            inputCorrectResultFun: function(dataFun){
+              this.correctResult[dataFun.index] = dataFun.inputBet;
+            },
             logout: function() {
                 localStorage.removeItem("jwt");
                 this.$router.replace({ name: "login" });
             },
             invioDati(){
-              alert("dati inviati");
+              // fare post
+              console.log(this.bet1x2);
+              console.log(this.correctResult);
+              
             },
 
             getMatch (ctx) {
@@ -132,7 +146,7 @@
         padding: 20px;
         margin-top: 10px;
     }
-    #buttonInvio {
-      text-align: right;
+    #logout {
+      align-content: right;
     }
 </style>
