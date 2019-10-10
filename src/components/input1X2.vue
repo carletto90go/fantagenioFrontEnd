@@ -14,9 +14,9 @@ export default {
                 inputBet: null,
                  optionsBet1x2: [
                 { value: null, text: 'Inserire risultato esatto' },
-                { value: '1', text: '1' },
-                { value: '2', text: '2' },
-                { value: 'X', text: 'X' }
+                { value: 1, text: '1' },
+                { value: 2, text: '2' },
+                { value: 0, text: 'X' }
                  ],
             }
         }

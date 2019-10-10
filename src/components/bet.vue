@@ -103,7 +103,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
                     this.templatePostMatches[i].homeGoals = this.correctResult[i][0];
                     this.templatePostMatches[i].awayGoals = this.correctResult[i][1];
-                    this.templatePostMatches[i].userID = 1;
                     this.postMatches.request.push(this.templatePostMatches[i]);
                 }
                 const jwt = localStorage.getItem("jwt");
@@ -121,7 +120,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                 .then( response => {
                     console.log(response);
                     });
-                //const response = this.axios.post("localhost:3000/api/user/matches", options);
             },
             getMatch (ctx) {
                 const options = {
@@ -149,6 +147,8 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
 
                         //da creare New Date cit. ghiuttolo
                         nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
+                        nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
+                        console.log(nextMatches.matches[i].matchDate);
 
                         this.templatePostMatches[i].idMatch = teams[i].idEvent;
                         this.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
