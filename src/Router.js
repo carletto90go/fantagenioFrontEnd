@@ -16,7 +16,10 @@ let router =  new Router({
         {
             path: "/login",
             name: "login",
-            component: LoginComponent
+            component: LoginComponent,
+            meta: {
+                loggedIn : false
+            }
         },
         {
             path: "/bet",

@@ -54,7 +54,10 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
             return {
                 correctResult: [],
                 bet1x2: [],
-
+                postMatches: {
+                    request : []
+                    },
+                templatePostMatches : [{},{},{},{},{},{},{},{},{},{}],
                 numeroGiornata: null, 
                 fields: [
                    {
@@ -72,7 +75,8 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     label: 'Risultato Esatto'
                   },
                   {
-                    key: 'bet1x2'
+                    key: 'bet1x2',
+                    label: "1 x 2"
                   }
                 ],
             }
@@ -85,24 +89,41 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
         methods: {
             input1x2Fun: function(dataFun){
               this.bet1x2[dataFun.index] = dataFun.inputBet;
-
-            },
+                },
             inputCorrectResultFun: function(dataFun){
               this.correctResult[dataFun.index] = dataFun.inputBet;
-            },
+                },
             logout: function() {
                 localStorage.removeItem("jwt");
                 this.$router.replace({ name: "login" });
-            },
+                },
             invioDati(){
-              // fare post
-              console.log(this.bet1x2);
-              console.log(this.correctResult);
-              
-            },
+                // fare post
+                for(let i=0; i<10; i++){
+                    this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
+                    this.templatePostMatches[i].homeGoals = this.correctResult[i][0];
+                    this.templatePostMatches[i].awayGoals = this.correctResult[i][1];
+                    this.templatePostMatches[i].userID = 1;
+                    this.postMatches.request.push(this.templatePostMatches[i]);
+                }
+                const jwt = localStorage.getItem("jwt");
+                console.log(this.postMatches.request);
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Access-Control-Allow-Origin' : '*',
+                        'Content-Type': 'application/json',
+                        'auth-token' : jwt
+                        }
+                };
 
+                this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.postMatches, options)
+                .then( response => {
+                    console.log(response);
+                    });
+                //const response = this.axios.post("localhost:3000/api/user/matches", options);
+            },
             getMatch (ctx) {
-              
                 const options = {
                     method: 'GET',
                     headers: {
@@ -116,7 +137,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     nextMatches.matches = [];
                     
                     this.numeroGiornata = teams[0].intRound;
-                    
                     for (let i =0; i<10; i++) {
                         nextMatches.matches.push({
                             "match": teams[i].strEvent,
@@ -126,9 +146,15 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                             "matchDate" : teams[i].strDate,
                             "matchTime" : teams[i].strTime
                         });
+
                         //da creare New Date cit. ghiuttolo
                         nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
-                        
+
+                        this.templatePostMatches[i].idMatch = teams[i].idEvent;
+                        this.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
+                        this.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
+                        this.templatePostMatches[i].round = parseInt(teams[i].intRound);
+                        this.templatePostMatches[i].matchDate = nextMatches.matches[i].matchDate;
                     }
 
                     return nextMatches.matches;
