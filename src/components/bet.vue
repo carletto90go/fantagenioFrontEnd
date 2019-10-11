@@ -3,12 +3,12 @@
         <div>
   <b-card title="Card Title" no-body>
     <b-card-header header-tag="nav">
-      <b-nav>
+<!--       <b-nav>
         <b-nav-item active>Scommessa</b-nav-item>
         <b-nav-item>Classifica</b-nav-item>
         <b-nav-item>Giornata precedente</b-nav-item>
         <b-nav-item ><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
-      </b-nav>
+      </b-nav> -->
     </b-card-header>
 
     <b-card-body class="text-center">
@@ -30,15 +30,10 @@
         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
         </div>
       </b-card-text>
-
-      
     </b-card-body>
   </b-card>
 </div>
-        <b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button>
-        
-    
-    </div>
+</div>
 </template>
 <script>
 import inputComp1x2 from './input1X2.vue';
@@ -93,10 +88,7 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
             inputCorrectResultFun: function(dataFun){
               this.correctResult[dataFun.index] = dataFun.inputBet;
                 },
-            logout: function() {
-                localStorage.removeItem("jwt");
-                this.$router.replace({ name: "login" });
-                },
+            
             invioDati(){
                 // fare post
                 for(let i=0; i<10; i++){

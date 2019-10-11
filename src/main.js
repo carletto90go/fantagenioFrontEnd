@@ -9,9 +9,9 @@ import VueAxios from 'vue-axios'
  import 'bootstrap-vue/dist/bootstrap-vue.css'
 import cors from 'cors'
 
+
 Vue.use(VueAxios, axios, BootstrapVue, cors)
 Vue.config.productionTip = false
-
 
 new Vue({
 router: Router,

@@ -1,19 +1,25 @@
 <template>
-    <div id="login" >
-      <b-alert variant="danger" :show="input.showAlert">Username o Password errati</b-alert>
-    <div>
-      <h1 class="titolo">Benvenuto su Fantagenio!</h1>
-    </div>
-    <div class="form">
-    <b-form  @submit.stop.prevent>
-            <label>Username:</label>
-            <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
-            <label for="text-password">Password:</label>
-            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
-            <b-button type="button" size="lg" v-on:click="login()">Accedi</b-button>
-    </b-form>
-    </div>
-    </div>
+  <div id="login">
+       <div class="text-center">
+       <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
+       </div>
+      <div>
+        <h1 class="titolo">Benvenuto su Fantagenio!</h1>
+      </div>
+      <div class="form" >
+              <b-form>
+                    <label>Username:</label>
+                    <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
+                    <label for="text-password">Password:</label>
+                    <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
+                    <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="login()">Accedi</b-button>
+            </b-form>
+       </div>
+              <div class="text-center" v-if="input.spinner">    
+                <b-spinner variant="light" label="Text Centered"></b-spinner>
+              </div>
+              
+  </div>  
 </template>
 
 <script>
@@ -25,21 +31,29 @@
                     username: "carlo",
                     password: "manu19",
                     output: "",
-                    showAlert: false
+                    showAlert: false,
+                    spinner: false
+
                 }
             }
         },
+
         mounted() {
             console.log(this.ciao);
             if(localStorage.getItem("jwt")){
                 //eslint-disable-next-line
                 console.log("Redirecting...");
-                this.$router.replace({ name : "bet" });
+                this.$router.replace({ name : "nav" });
                 }
         },
         methods: {
+
             login() {
                 if(this.input.username != "" && this.input.password != "") {
+                    let object = this;
+                    this.input.spinner = true;
+                    // $("#spinner").attr('style',"display: block");
+                    this.visible = true
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
                     {
                         "request":{
@@ -51,11 +65,13 @@
                     //eslint-disable-next-line
                       console.log(response);
                       localStorage.setItem("jwt", response.data);
-                      this.$router.replace({ name: "bet" });
+                      this.$router.replace({ name: "nav" });
                     })
                     .catch(function (error) {
                     //eslint-disable-next-line
                      console.log(error);
+                     object.input.spinner = false;
+                     object.input.showAlert = true;
                     });
                 } else {
                    this.input.showAlert = true; //    console.log("The username and / or password is incorrect");
