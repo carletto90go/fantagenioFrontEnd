@@ -14,7 +14,7 @@
               </b-table>
         </div>
         <div>
-        <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
+         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
         </div>
 </div>
 </template>
