@@ -1,19 +1,6 @@
 <template>
     <div id="bet">
         <div>
-  <b-card title="Card Title" no-body>
-    <b-card-header header-tag="nav">
-<!--       <b-nav>
-        <b-nav-item active>Scommessa</b-nav-item>
-        <b-nav-item>Classifica</b-nav-item>
-        <b-nav-item>Giornata precedente</b-nav-item>
-        <b-nav-item ><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
-      </b-nav> -->
-    </b-card-header>
-
-    <b-card-body class="text-center">
-      <b-card-text>
-            <div>
         <h1>Giornata Numero {{numeroGiornata}}</h1>
         </div>
         <div>
@@ -29,10 +16,6 @@
         <div>
         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
         </div>
-      </b-card-text>
-    </b-card-body>
-  </b-card>
-</div>
 </div>
 </template>
 <script>
