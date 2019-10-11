@@ -83,7 +83,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                         }
                     }
                 const jwt = localStorage.getItem("jwt");
-                console.log(this.postMatches.request);
                 const options = {
                     method: 'POST',
                     headers: {
@@ -95,10 +94,9 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
 
                 this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.postMatches, options)
                 .then( response => {
-                    console.log(response);
                     });
             },
-            getMatch (ctx) {
+            getMatch () {
                 const options = {
                     method: 'GET',
                     headers: {
@@ -125,7 +123,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                         //da creare New Date cit. ghiuttolo
                         nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
                         nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
-                        console.log(nextMatches.matches[i].matchDate);
 
                         this.templatePostMatches[i].idMatch = teams[i].idEvent;
                         this.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
