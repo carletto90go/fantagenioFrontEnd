@@ -1,12 +1,12 @@
 <template>
-    <div id="bet">
+    <div id="standings">
         <div>
   <b-card title="Card Title" no-body>
 
     <b-card-body class="text-center">
       <b-card-text>
             <div>
-        <h1>Giornata Numero {{numeroGiornata}}</h1>
+        <h1>Giornata Numero testtesttest</h1>
         </div>
         <div>
               <b-table striped hover responsive :items="getMatch" :fields="fields">
@@ -32,7 +32,7 @@ import inputComp1x2 from './input1X2.vue';
 import inputCompCorrectResult from './inputCorrectResult.vue';
 
     export default {
-        name: 'bet',
+        name: 'standings',
         components: {
             inputComp1x2,
             inputCompCorrectResult
@@ -45,7 +45,7 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     request : []
                     },
                 templatePostMatches : [{},{},{},{},{},{},{},{},{},{}],
-                numeroGiornata: null, 
+                numeroGiornata: null,
                 fields: [
                    {
                     key: 'matchDate',
@@ -81,7 +81,7 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
             inputCorrectResultFun: function(dataFun){
               this.correctResult[dataFun.index] = dataFun.inputBet;
                 },
-            
+
             invioDati(){
                 // fare post
                 for(let i=0; i<10; i++){
@@ -119,7 +119,7 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     let teams = responseMatch.data.events;
                     let nextMatches = {};
                     nextMatches.matches = [];
-                    
+
                     this.numeroGiornata = teams[0].intRound;
                     for (let i =0; i<10; i++) {
                         nextMatches.matches.push({

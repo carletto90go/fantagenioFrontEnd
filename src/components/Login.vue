@@ -39,12 +39,13 @@
         },
 
         mounted() {
-            console.log(this.ciao);
+        /*
             if(localStorage.getItem("jwt")){
                 //eslint-disable-next-line
                 console.log("Redirecting...");
                 this.$router.replace({ name : "nav" });
                 }
+        */
         },
         methods: {
 
@@ -52,7 +53,6 @@
                 if(this.input.username != "" && this.input.password != "") {
                     let object = this;
                     this.input.spinner = true;
-                    // $("#spinner").attr('style',"display: block");
                     this.visible = true
                     this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
                     {
@@ -65,7 +65,7 @@
                     //eslint-disable-next-line
                       console.log(response);
                       localStorage.setItem("jwt", response.data);
-                      this.$router.replace({ name: "nav" });
+                      this.$router.push({ name: "nav" });
                     })
                     .catch(function (error) {
                     //eslint-disable-next-line
