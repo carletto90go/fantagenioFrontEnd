@@ -1,9 +1,8 @@
 {
   "name": "fantalogin",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "scripts": {
-    "postinstall": "npm run build",
     "start": "node server.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -62,7 +61,7 @@
     "last 2 versions"
   ],
   "description": "```\r npm install\r ```",
-  "main": "/assets/index.html",
+  "main": "/public/index.html",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/carletto90go/fantagenioFrontEnd.git"
