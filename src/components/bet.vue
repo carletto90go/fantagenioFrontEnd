@@ -1,11 +1,6 @@
 <template>
     <div id="bet">
         <div>
-  <b-card title="Card Title" no-body>
-
-    <b-card-body class="text-center">
-      <b-card-text>
-            <div>
         <h1>Giornata Numero {{numeroGiornata}}</h1>
         </div>
         <div>
@@ -21,10 +16,6 @@
         <div>
         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
         </div>
-      </b-card-text>
-    </b-card-body>
-  </b-card>
-</div>
 </div>
 </template>
 <script>
@@ -69,9 +60,8 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
             }
         },
         mounted(){
-        /*
             if(!localStorage.getItem("jwt"))
-                this.$router.replace({ name: "login" }); */
+                this.$router.replace({ name: "login" });
         },
 
         methods: {
@@ -105,7 +95,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                 .then( response => {
                     console.log(response);
                     });
-                this.postMatches.request = [];
             },
             getMatch (ctx) {
                 const options = {
@@ -133,7 +122,6 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
 
                         //da creare New Date cit. ghiuttolo
                         nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
-
                         nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
                         console.log(nextMatches.matches[i].matchDate);
 
