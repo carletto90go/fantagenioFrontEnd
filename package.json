@@ -1,7 +1,7 @@
 {
   "name": "fantalogin",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "postinstall": "npm run build",
     "start": "node server.js",
