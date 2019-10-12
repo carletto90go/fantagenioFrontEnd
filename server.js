@@ -11,7 +11,7 @@ app.listen(port, () => {
 	console.log(`Starting server at ${port}`);
 });
 app.use(cors());
-app.use('/', serveStatic(path.join(__dirname, 'dist')));
+//app.use('/', serveStatic(path.join(__dirname, 'dist')));
 
 app.get('/', (req,res) => {
     response.send("Bella Heroku");
