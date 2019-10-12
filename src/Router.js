@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginComponent from "./components/Login.vue"
-import navComponent from "./components/nav.vue"
+import navComponent from "./components/ourNavBar.vue"
 
 
 Vue.use(Router)
@@ -23,8 +23,8 @@ let router =  new Router({
             }
         },
         {
-            path: "/nav",
-            name: "nav",
+            path: "/ourNavBar",
+            name: "ourNavBar",
             component: navComponent,
             meta: {
                 loggedIn : true

@@ -1,25 +1,24 @@
 <template>
-  <div id="login">
-       <div class="text-center">
-       <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
-       </div>
-      <div>
-        <h1 class="titolo">Benvenuto su Fantagenio!</h1>
-      </div>
-      <div class="form" >
-              <b-form>
-                    <label>Username:</label>
-                    <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
-                    <label for="text-password">Password:</label>
-                    <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
-                    <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="login()">Accedi</b-button>
+    <div id="login">
+        <div class="text-center">
+            <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
+        </div>
+        <div>
+            <h1 class="titolo">Benvenuto su Fantagenio!</h1>
+        </div>
+        <div class="form" >
+            <b-form>
+            <label>Username:</label>
+            <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
+            <label for="text-password">Password:</label>
+            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
+            <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="login()">Accedi</b-button>
             </b-form>
-       </div>
-              <div class="text-center" v-if="input.spinner">    
-                <b-spinner variant="light" label="Text Centered"></b-spinner>
-              </div>
-              
-  </div>  
+        </div>
+        <div class="text-center" v-if="input.spinner">
+            <b-spinner variant="light" label="Text Centered"></b-spinner>
+        </div>
+    </div>
 </template>
 
 <script>

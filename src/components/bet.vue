@@ -1,7 +1,7 @@
 <template>
     <div id="bet">
         <div>
-        <h1>Giornata Numero {{numeroGiornata}}</h1>
+            <h1>Giornata Numero {{numeroGiornata}}</h1>
         </div>
         <div>
               <b-table striped hover responsive :items="getMatch" :fields="fields">
@@ -12,11 +12,15 @@
                      <inputComp1x2 :parentIndex="row.index" @listenerInput1x2="input1x2Fun" />
                 </template>
               </b-table>
-        </div>
-        <div>
-         <b-button class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
-        </div>
-</div>
+       </div>
+       <div class="text-center">
+       <b-spinner v-if="loadingSpinner" variant="success" label="Spinning" ></b-spinner>
+       <b-button v-b-modal.modal-1 v-if="!loadingSpinner" class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
+        <b-modal id="modal-1" title="BootstrapVue">
+            <p class="my-4">Hello from modal!</p>
+        </b-modal>
+       </div>
+    </div>
 </template>
 <script>
 import inputComp1x2 from './input1X2.vue';
@@ -30,6 +34,8 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
         },
         data() {
             return {
+                loadingSpinner : false,
+                sendDataResponse : {},
                 correctResult: [],
                 bet1x2: [],
                 postMatches: {
@@ -73,7 +79,7 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                 },
             
             invioDati(){
-                // fare post
+
                 for(let i=0; i<10; i++){
                     if(this.bet1x2[i] && this.correctResult[i]) {
                         this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
@@ -92,9 +98,11 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                         }
                 };
 
-                this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.postMatches, options)
+                return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.postMatches, options)
                 .then( response => {
-
+                        this.sendDataResponse = response;
+                        this.postMatches = { request : [] };
+                        this.loadingSpinner = false;
                     });
             },
             getMatch () {
