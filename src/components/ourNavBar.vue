@@ -36,30 +36,29 @@ export default {
             precComponent
         },
     mounted(){
-            if(!localStorage.getItem("jwt"))
-                this.$router.replace({ name: "login" });
-               },
-    methods:
-    {
-       logout: function() {
-                localStorage.removeItem("jwt");
-                this.$router.replace({ name: "login" });      
-    },
-     clickScommessa() {
-                    this.betActive = true;
-                    this.precActive = false;
-                    this.standingsActive = false;
-                },
-                clickPrec() {
-                    this.betActive = false;
-                    this.precActive = true;
-                    this.standingsActive = false;
-                },
-                clickStandings() {
-                    this.betActive = false;
-                    this.precActive = false;
-                    this.standingsActive = true;
-                },
+        if(!localStorage.getItem("jwt"))
+            this.$router.push({ name: "login" });
+           },
+    methods: {
+        logout: function() {
+            localStorage.removeItem("jwt");
+            this.$router.push({ name: "login" });
+            },
+        clickScommessa() {
+            this.betActive = true;
+            this.precActive = false;
+            this.standingsActive = false;
+            },
+        clickPrec() {
+            this.betActive = false;
+            this.precActive = true;
+            this.standingsActive = false;
+            },
+        clickStandings() {
+            this.betActive = false;
+            this.precActive = false;
+            this.standingsActive = true;
+            },
         }
 }
 </script>
