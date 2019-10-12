@@ -16,7 +16,7 @@ export default {
                 { value: null, text: 'Inserire risultato esatto' },
                 { value: 1, text: '1' },
                 { value: 2, text: '2' },
-                { value: 0, text: 'X' }
+                { value: 3, text: 'X' }
                  ],
             }
         }
