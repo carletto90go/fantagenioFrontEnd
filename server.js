@@ -8,12 +8,14 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.static('dist'));
 app.listen(port, () => {
 	console.log(`Starting server at ${port}`);
 });
-app.use(cors());
 //app.use('/', serveStatic(path.join(__dirname, 'dist')));
-
+/*
 app.get('/', (req,res) => {
     res.send("Bella Heroku");
-})
+})*/
