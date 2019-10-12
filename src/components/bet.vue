@@ -58,7 +58,7 @@ export default {
             }
         }
     },
-    created(){
+    mounted(){
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
         const options = {
@@ -80,9 +80,8 @@ export default {
                 }};
             this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
             .then( myPred => {
-                let predArray;
-                if(myPred){
-                    predArray = myPred.data.response;
+                let predArray = myPred.data.response;
+                if(predArray.length){
                     tableFields.push({
                         key: 'prediction',
                         sortable: false,
@@ -96,14 +95,14 @@ export default {
                         "awayTeam" : teams[i].strAwayTeam,
                         "homeTeam" : teams[i].strHomeTeam,
                         "matchDate" : teams[i].strDate,
-                        "matchTime" : teams[i].strTime
-                        //"prediction" : predArray[j].bet1x2
+                        "matchTime" : teams[i].strTime,
+                        "prediction" : ""
                     }
-                    if(myPred) {
-                        let j=0;
-                        while(teams[i].idEvent != predArray[j].idMatch) j++;
-                        tableItem.prediction = predArray[j].bet1x2;
-                        }
+                    for(let j=0; j < predArray.length; j++){
+                        if(predArray[j].idMatch == parseInt(teams[i].idEvent)) tableItem.prediction = predArray[j].bet1x2;
+                    }
+
+
                     tableItems.push(tableItem);
 
                     //da creare New Date cit. ghiuttolo
@@ -120,10 +119,11 @@ export default {
                 });
             });
         },
-    mounted(){
-        if(!localStorage.getItem("jwt"))
-            this.$router.push({ name: "login" });
-        },
+    beforeDestroy(){
+        this.tableData.items = null;
+        tableItems = [];
+        if(tableFields.length == 5) tableFields.pop();
+    },
 
     methods: {
         input1x2Fun: function(dataFun){
@@ -162,43 +162,6 @@ export default {
                     this.widgetData.sendSpinner = false;
                 });
         }
-        /*,
-        getMatch () {
-            const options = {
-                method: 'GET',
-                headers: {
-                'Content-Type': 'application/json'
-            }};
-            const responseMatchh = this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options);
-
-            return responseMatchh.then( responseMatch => {
-                let teams = responseMatch.data.events;
-                let nextMatches = {};
-                nextMatches.matches = [];
-
-                for (let i =0; i<10; i++) {
-                    nextMatches.matches.push({
-                        "match": teams[i].strEvent,
-                        "id": teams[i].idEvent,
-                        "awayTeam" : teams[i].strAwayTeam,
-                        "homeTeam" : teams[i].strHomeTeam,
-                        "matchDate" : teams[i].strDate,
-                        "matchTime" : teams[i].strTime
-                    });
-
-                    //da creare New Date cit. ghiuttolo
-                    nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
-                    nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
-
-                    this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
-                    this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
-                    this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
-                    this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
-                    this.sendMatchesData.templatePostMatches[i].matchDate = nextMatches.matches[i].matchDate;
-                }
-                return nextMatches.matches;
-            });
-        }*/
     }
 }
 
