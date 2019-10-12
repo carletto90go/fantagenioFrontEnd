@@ -42,7 +42,7 @@
             if(localStorage.getItem("jwt")){
                 //eslint-disable-next-line
                 console.log("Redirecting...");
-                this.$router.replace({ name : "nav" });
+                this.$router.replace({ name : "ourNavBar" });
                 }
         */
         },
@@ -64,7 +64,7 @@
                     //eslint-disable-next-line
                       console.log(response);
                       localStorage.setItem("jwt", response.data);
-                      this.$router.push({ name: "nav" });
+                      this.$router.push({ name: "ourNavBar" });
                     })
                     .catch(function (error) {
                     //eslint-disable-next-line
