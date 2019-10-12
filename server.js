@@ -15,5 +15,5 @@ app.use(cors());
 //app.use('/', serveStatic(path.join(__dirname, 'dist')));
 
 app.get('/', (req,res) => {
-    response.send("Bella Heroku");
+    res.send("Bella Heroku");
 })
