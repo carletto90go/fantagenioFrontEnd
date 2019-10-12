@@ -1,40 +1,48 @@
 <template>
     <div id="bet">
         <div>
-            <h1>Giornata Numero {{numeroGiornata}}</h1>
+            <h1 align="center">Giornata Numero {{tableData.round}}</h1>
         </div>
-        <div>
-              <b-table striped hover responsive :items="getMatch" :fields="fields">
+        <div class="text-center">
+            <b-table v-if="!widgetData.tableLoadingSpinner" striped hover responsive :items="tableData.items" :fields="tableData.fields">
                 <template v-slot:cell(correctResult)="row">
-                     <inputCompCorrectResult :parentIndex="row.index" @listenerInputCorrectResult="inputCorrectResultFun" />
+                    <inputCompCorrectResult :parentIndex="row.index" @listenerInputCorrectResult="inputCorrectResultFun" />
                 </template>
                 <template v-slot:cell(bet1x2)="row">
-                     <inputComp1x2 :parentIndex="row.index" @listenerInput1x2="input1x2Fun" />
+                    <inputComp1x2 :parentIndex="row.index" @listenerInput1x2="input1x2Fun" />
                 </template>
-              </b-table>
-       </div>
-       <div class="text-center">
-       <b-spinner v-if="loadingSpinner" variant="success" label="Spinning" ></b-spinner>
-       <b-button v-b-modal.modal-1 v-if="!loadingSpinner" class="buttonInvio" variant="success" type="button" v-on:click="invioDati()" >INVIO SCOMMESSA</b-button>
-        <b-modal id="modal-1" title="BootstrapVue">
-            <p class="my-4">Hello from modal!</p>
-        </b-modal>
-       </div>
+            </b-table>
+            <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
+        </div>
+        <div class="text-center">
+            <b-spinner v-if="widgetData.sendSpinner" variant="success" label="Spinning" ></b-spinner>
+            <b-button v-if="!widgetData.sendSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
+            <!--
+            <b-button v-b-modal.modal-1 v-if="!widgetData.sendSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
+            <b-modal id="modal-1" title="BootstrapVue">
+                <p>Hello from modal!</p>
+            </b-modal>
+            -->
+        </div>
     </div>
 </template>
 <script>
 import inputComp1x2 from './input1X2.vue';
 import inputCompCorrectResult from './inputCorrectResult.vue';
 
-    export default {
-        name: 'bet',
-        components: {
-            inputComp1x2,
-            inputCompCorrectResult
-        },
-        data() {
-            return {
-                loadingSpinner : false,
+export default {
+    name: 'bet',
+    components: {
+        inputComp1x2,
+        inputCompCorrectResult
+    },
+    data() {
+        return {
+            widgetData : {
+                sendSpinner : false,
+                tableLoadingSpinner : false
+            },
+            sendMatchesData : {
                 sendDataResponse : {},
                 correctResult: [],
                 bet1x2: [],
@@ -42,110 +50,180 @@ import inputCompCorrectResult from './inputCorrectResult.vue';
                     request : []
                     },
                 templatePostMatches : [{},{},{},{},{},{},{},{},{},{}],
-                numeroGiornata: null, 
-                fields: [
-                   {
-                    key: 'matchDate',
-                    sortable: false,
-                    label: 'Data Partita'
-                  },
-                  {
-                    key: 'match',
-                    sortable: false,
-                    label: 'Incontro'
-                  },
-                  {
-                    key: 'correctResult',
-                    label: 'Risultato Esatto'
-                  },
-                  {
-                    key: 'bet1x2',
-                    label: "1 x 2"
-                  }
-                ],
-            }
-        },
-        mounted(){
-            if(!localStorage.getItem("jwt"))
-                this.$router.replace({ name: "login" });
-        },
-
-        methods: {
-            input1x2Fun: function(dataFun){
-              this.bet1x2[dataFun.index] = dataFun.inputBet;
-                },
-            inputCorrectResultFun: function(dataFun){
-              this.correctResult[dataFun.index] = dataFun.inputBet;
-                },
-            
-            invioDati(){
-
-                for(let i=0; i<10; i++){
-                    if(this.bet1x2[i] && this.correctResult[i]) {
-                        this.templatePostMatches[i].bet1x2 = this.bet1x2[i];
-                        this.templatePostMatches[i].homeGoals = this.correctResult[i][0];
-                        this.templatePostMatches[i].awayGoals = this.correctResult[i][1];
-                        this.postMatches.request.push(this.templatePostMatches[i]);
-                        }
-                    }
-                const jwt = localStorage.getItem("jwt");
-                const options = {
-                    method: 'POST',
-                    headers: {
-                        'Access-Control-Allow-Origin' : '*',
-                        'Content-Type': 'application/json',
-                        'auth-token' : jwt
-                        }
-                };
-
-                return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.postMatches, options)
-                .then( response => {
-                        this.sendDataResponse = response;
-                        this.postMatches = { request : [] };
-                        this.loadingSpinner = false;
-                    });
             },
-            getMatch () {
-                const options = {
-                    method: 'GET',
-                    headers: {
-                    'Content-Type': 'application/json'
-                }};
-                const responseMatchh = this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options);
-
-                return responseMatchh.then( responseMatch => {
-                    let teams = responseMatch.data.events;
-                    let nextMatches = {};
-                    nextMatches.matches = [];
-                    
-                    this.numeroGiornata = teams[0].intRound;
-                    for (let i =0; i<10; i++) {
-                        nextMatches.matches.push({
-                            "match": teams[i].strEvent,
-                            "id": teams[i].idEvent,
-                            "awayTeam" : teams[i].strAwayTeam,
-                            "homeTeam" : teams[i].strHomeTeam,
-                            "matchDate" : teams[i].strDate,
-                            "matchTime" : teams[i].strTime
-                        });
-
-                        //da creare New Date cit. ghiuttolo
-                        nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
-                        nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
-
-                        this.templatePostMatches[i].idMatch = teams[i].idEvent;
-                        this.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
-                        this.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
-                        this.templatePostMatches[i].round = parseInt(teams[i].intRound);
-                        this.templatePostMatches[i].matchDate = nextMatches.matches[i].matchDate;
-                    }
-
-                    return nextMatches.matches;
-                });
+            tableData: {
+                round: null,
+                items: tableItems,
+                fields: tableFields
             }
-
         }
+    },
+    created(){
+        this.widgetData.tableLoadingSpinner = true;
+        //controllo eventuali scommesse già inserite
+        const options = {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json'
+        }};
+        this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
+        .then( responseMatch => {
+            let teams = responseMatch.data.events;
+            this.tableData.round = teams[0].intRound;
+
+            const jwt = localStorage.getItem("jwt");
+            const hiddenOptions = {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json',
+                'auth-token' : jwt
+                }};
+            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
+            .then( myPred => {
+                let predArray;
+                if(myPred){
+                    predArray = myPred.data.response;
+                    tableFields.push({
+                        key: 'prediction',
+                        sortable: false,
+                        label: 'Pronostico'
+                        });
+                    }
+                for (let i =0; i<10; i++) {
+                    let tableItem = {
+                        "match": teams[i].strEvent,
+                        "id": teams[i].idEvent,
+                        "awayTeam" : teams[i].strAwayTeam,
+                        "homeTeam" : teams[i].strHomeTeam,
+                        "matchDate" : teams[i].strDate,
+                        "matchTime" : teams[i].strTime
+                        //"prediction" : predArray[j].bet1x2
+                    }
+                    if(myPred) {
+                        let j=0;
+                        while(teams[i].idEvent != predArray[j].idMatch) j++;
+                        tableItem.prediction = predArray[j].bet1x2;
+                        }
+                    tableItems.push(tableItem);
+
+                    //da creare New Date cit. ghiuttolo
+                    tableItems[i].matchDate += " " + tableItems[i].matchTime.substring(0, tableItems[i].matchTime.length -9);
+                    tableItems[i].matchDate = tableItems[i].matchDate.substring(0, 6) + "20" + tableItems[i].matchDate.substring(6, tableItems[i].matchDate.lenght);
+
+                    this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
+                    this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
+                    this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
+                    this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
+                    this.sendMatchesData.templatePostMatches[i].matchDate = tableItems[i].matchDate;
+                    }
+                this.widgetData.tableLoadingSpinner = false;
+                });
+            });
+        },
+    mounted(){
+        if(!localStorage.getItem("jwt"))
+            this.$router.push({ name: "login" });
+        },
+
+    methods: {
+        input1x2Fun: function(dataFun){
+          this.sendMatchesData.bet1x2[dataFun.index] = dataFun.inputBet;
+            },
+        inputCorrectResultFun: function(dataFun){
+          this.sendMatchesData.correctResult[dataFun.index] = dataFun.inputBet;
+            },
+        sendMatches(){
+            this.widgetData.sendSpinner = true;
+            for(let i=0; i<10; i++){
+                if(this.sendMatchesData.bet1x2[i] && this.sendMatchesData.correctResult[i]) {
+                    if(this.sendMatchesData.bet1x2[i] == 3)
+                        this.sendMatchesData.templatePostMatches[i].bet1x2 = 0;
+                    else this.sendMatchesData.templatePostMatches[i].bet1x2 = this.sendMatchesData.bet1x2[i];
+                    this.sendMatchesData.templatePostMatches[i].homeGoals = this.sendMatchesData.correctResult[i][0];
+                    this.sendMatchesData.templatePostMatches[i].awayGoals = this.sendMatchesData.correctResult[i][1];
+                    this.sendMatchesData.postMatches.request.push(this.sendMatchesData.templatePostMatches[i]);
+                    }
+                }
+            console.log(this.sendMatchesData);
+            const jwt = localStorage.getItem("jwt");
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Access-Control-Allow-Origin' : '*',
+                    'Content-Type': 'application/json',
+                    'auth-token' : jwt
+                    }
+            };
+            console.log(this.sendMatchesData.postMatches);
+            return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
+            .then( response => {
+                    this.sendMatchesData.sendDataResponse = response;
+                    this.sendMatchesData.postMatches = { request : [] };
+                    this.widgetData.sendSpinner = false;
+                });
+        }
+        /*,
+        getMatch () {
+            const options = {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json'
+            }};
+            const responseMatchh = this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options);
+
+            return responseMatchh.then( responseMatch => {
+                let teams = responseMatch.data.events;
+                let nextMatches = {};
+                nextMatches.matches = [];
+
+                for (let i =0; i<10; i++) {
+                    nextMatches.matches.push({
+                        "match": teams[i].strEvent,
+                        "id": teams[i].idEvent,
+                        "awayTeam" : teams[i].strAwayTeam,
+                        "homeTeam" : teams[i].strHomeTeam,
+                        "matchDate" : teams[i].strDate,
+                        "matchTime" : teams[i].strTime
+                    });
+
+                    //da creare New Date cit. ghiuttolo
+                    nextMatches.matches[i].matchDate += " " + nextMatches.matches[i].matchTime.substring(0, nextMatches.matches[i].matchTime.length -9);
+                    nextMatches.matches[i].matchDate = nextMatches.matches[i].matchDate.substring(0, 6) + "20" + nextMatches.matches[i].matchDate.substring(6, nextMatches.matches[i].matchDate.lenght);
+
+                    this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
+                    this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
+                    this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
+                    this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
+                    this.sendMatchesData.templatePostMatches[i].matchDate = nextMatches.matches[i].matchDate;
+                }
+                return nextMatches.matches;
+            });
+        }*/
     }
+}
+
+let tableItems = [];
+
+let tableFields = [
+     {
+      key: 'matchDate',
+      sortable: false,
+      label: 'Data Partita'
+    },
+    {
+      key: 'match',
+      sortable: false,
+      label: 'Incontro'
+    },
+    {
+      key: 'correctResult',
+      label: 'Risultato Esatto'
+    },
+    {
+      key: 'bet1x2',
+      label: "1 x 2"
+    }
+  ];
 </script>
 
 <style scoped>

@@ -38,13 +38,8 @@
         },
 
         mounted() {
-        /*
-            if(localStorage.getItem("jwt")){
-                //eslint-disable-next-line
-                console.log("Redirecting...");
-                this.$router.replace({ name : "ourNavBar" });
-                }
-        */
+            if(localStorage.getItem("jwt"))
+                this.$router.push({ name : "ourNavBar" });
         },
         methods: {
 
@@ -61,14 +56,10 @@
                         }
                     })
                     .then( response => {
-                    //eslint-disable-next-line
-                      console.log(response);
                       localStorage.setItem("jwt", response.data);
                       this.$router.push({ name: "ourNavBar" });
                     })
                     .catch(function (error) {
-                    //eslint-disable-next-line
-                     console.log(error);
                      object.input.spinner = false;
                      object.input.showAlert = true;
                     });
@@ -79,7 +70,7 @@
         }
     }
 </script>
- <style scoped>
+<style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 .login-page {
   width: 360px;
@@ -184,5 +175,4 @@
   cursor: pointer;
   text-align: center;
 }
-
 </style>
