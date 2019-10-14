@@ -1,6 +1,6 @@
 <template>
     <div id="generalStandings">
-        <b-table>
+        <b-table  striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
         </b-table>
     </div>    
 </template>
@@ -16,18 +16,42 @@ export default{
         }
     },
     mounted(){
+         const jwt = localStorage.getItem("jwt");
          const options = {
             method: 'GET',
             headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'auth-token' : jwt
         }};
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/standings", options)
-        .then(
-            for (let i =0; i<10; i++) {
+        .then( standings =>{
+            console.log(standings);
+            for(let i =0; i<standings.data.response.length; i++) {
                     let tableItem = {
-                        "giocatore": response[i].username,
-                        "punti": response[i].points,
+                        "giocatore": standings.data.response[i].utente.username,
+                        "punti": standings.data.response[i].points,
                     }
-        )
-}
+                    tableItems.push(tableItem);
+            }        
+            });
+            
+    },
+     beforeDestroy(){
+        this.tableData.items = null;
+        tableItems = [];
+    }
+    }
+let tableItems = [];
+let tableFields = [
+     {
+      key: 'giocatore',
+      sortable: false,
+      label: 'Giocatore'
+    },
+    {
+      key: 'punti',
+      sortable: false,
+      label: 'Punti'
+    }
+  ];
 </script>
