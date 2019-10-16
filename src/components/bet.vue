@@ -16,13 +16,15 @@
         </div>
         <div class="text-center">
             <b-spinner v-if="widgetData.sendSpinner" variant="success" label="Spinning" ></b-spinner>
-            <b-button v-if="!widgetData.sendSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
-            <!--
-            <b-button v-b-modal.modal-1 v-if="!widgetData.sendSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
-            <b-modal id="modal-1" title="BootstrapVue">
-                <p>Hello from modal!</p>
+            <b-button v-if="!widgetData.sendSpinner && !widgetData.tableLoadingSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
+            <b-modal size="lg" ok-only ref="submitModal" title="Scommessa Inserita!">
+                <h2>Scommesse Nuove</h2>
+                <p v-for="i in sendMatchesData.sendDataResponse.created.length">Created!</p>
+                <h2>Scommesse Aggiornate</h2>
+                <p v-for="i in sendMatchesData.sendDataResponse.updated.length">Updated!</p>
+                <h2>Scommesse Fallite perchè già iniziate</h2>
+                <p v-for="i in sendMatchesData.sendDataResponse.failed.length">Failed!</p>
             </b-modal>
-            -->
         </div>
     </div>
 </template>
@@ -43,7 +45,11 @@ export default {
                 tableLoadingSpinner : false
             },
             sendMatchesData : {
-                sendDataResponse : {},
+                sendDataResponse : {
+                    created : [],
+                    updated : [],
+                    failed : []
+                    },
                 correctResult: [],
                 bet1x2: [],
                 postMatches: {
@@ -132,12 +138,16 @@ export default {
         inputCorrectResultFun: function(dataFun){
           this.sendMatchesData.correctResult[dataFun.index] = dataFun.inputBet;
             },
+        toggleSubmitModal () {
+            this.$refs["submitModal"].show();
+            },
         sendMatches(){
             this.widgetData.sendSpinner = true;
             for(let i=0; i<10; i++){
                 if(this.sendMatchesData.bet1x2[i] && this.sendMatchesData.correctResult[i]) {
                     if(this.sendMatchesData.bet1x2[i] == 3)
                         this.sendMatchesData.templatePostMatches[i].bet1x2 = 0;
+
                     else this.sendMatchesData.templatePostMatches[i].bet1x2 = this.sendMatchesData.bet1x2[i];
                     this.sendMatchesData.templatePostMatches[i].homeGoals = this.sendMatchesData.correctResult[i][0];
                     this.sendMatchesData.templatePostMatches[i].awayGoals = this.sendMatchesData.correctResult[i][1];
@@ -157,9 +167,10 @@ export default {
             console.log(this.sendMatchesData.postMatches);
             return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
             .then( response => {
-                    this.sendMatchesData.sendDataResponse = response;
+                    this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
                     this.widgetData.sendSpinner = false;
+                    this.toggleSubmitModal();
                 });
         }
     }

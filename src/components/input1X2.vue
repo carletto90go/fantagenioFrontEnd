@@ -23,10 +23,7 @@ export default {
     },
     props:{
         parentIndex: {
-            type: Number,
-            default(){
-                return 3
-                }
+            type: Number
         }
     },
     beforeMount(){
