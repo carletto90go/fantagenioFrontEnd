@@ -139,6 +139,9 @@ export default {
           this.sendMatchesData.correctResult[dataFun.index] = dataFun.inputBet;
             },
         toggleSubmitModal () {
+            //due elementi da utilizzare per visualizzare, come?
+            //console.log(this.sendMatchesData.templatePostMatches);
+            //console.log(this.sendMatchesData.sendDataResponse);
             this.$refs["submitModal"].show();
             },
         sendMatches(){
@@ -154,7 +157,6 @@ export default {
                     this.sendMatchesData.postMatches.request.push(this.sendMatchesData.templatePostMatches[i]);
                     }
                 }
-            console.log(this.sendMatchesData);
             const jwt = localStorage.getItem("jwt");
             const options = {
                 method: 'POST',
@@ -164,7 +166,6 @@ export default {
                     'auth-token' : jwt
                     }
             };
-            console.log(this.sendMatchesData.postMatches);
             return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
             .then( response => {
                     this.sendMatchesData.sendDataResponse = response.data;
