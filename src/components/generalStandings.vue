@@ -27,17 +27,17 @@ export default{
         .then( standings =>{
             console.log(standings);
             for(let i =0; i<standings.data.response.length; i++) {
-                    let tableItem = {
-                        "giocatore": standings.data.response[i].utente.username,
-                        "punti": standings.data.response[i].points,
-                    }
-                    tableItems.push(tableItem);
-            }        
+                let tableItem = {
+                    "giocatore": standings.data.response[i].utente.username,
+                    "punti": standings.data.response[i].points,
+                }
+                tableItems.push(tableItem);
+                }
             });
             
     },
      beforeDestroy(){
-        this.tableData.items = null;
+        this.tableDataStandings.items = null;
         tableItems = [];
     }
     }
