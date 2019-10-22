@@ -64,7 +64,7 @@ export default {
             }
         }
     },
-    created(){
+    mounted(){
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
         const options = {
@@ -74,8 +74,7 @@ export default {
         }};
         this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
         .then( responseNextMatch => {
-            //this.tableData.round = responseNextMatch.data.events[0].intRound;
-            this.tableData.round = 8;
+            this.tableData.round = responseNextMatch.data.events[0].intRound;
             this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.tableData.round+"&s=1920", options)
             .then( responseMatch => {
                 let teams = responseMatch.data.events;
