@@ -3,6 +3,7 @@
             <b-card title="Card Title" no-body>
                 <b-card-header header-tag="nav">
                     <b-nav>
+                        <b-img src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>   
                         <b-nav-item v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item>
                         <b-nav-item v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item>
                         <b-nav-item v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item>
