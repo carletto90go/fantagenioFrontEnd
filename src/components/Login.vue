@@ -3,11 +3,13 @@
         <div class="text-center">
             <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
         </div>
-        <div>
-            <h1 class="titolo">Benvenuto su Fantagenio!</h1>
+   <div>      
+            <h1 class="titolo">BENVENUTO </h1>
         </div>
         <div class="form" >
             <b-form>
+                   <b-img center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>   
+
             <label>Username:</label>
             <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
             <label for="text-password">Password:</label>
@@ -18,6 +20,7 @@
         <div class="text-center" v-if="input.spinner">
             <b-spinner variant="light" label="Text Centered"></b-spinner>
         </div>
+        
     </div>
 </template>
 
@@ -32,7 +35,6 @@
                     output: "",
                     showAlert: false,
                     spinner: false
-
                 }
             }
         },
