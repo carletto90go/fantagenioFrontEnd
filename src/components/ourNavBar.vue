@@ -76,10 +76,15 @@ export default {
             },
         handlerDbError(error){
             this.dbError = true;
+            if(this.betActive) return this.betActive = false;
+            if(this.standingsActive) return this.standingsActive = false;
+            if(this.precActive) return this.precActive = false;
             console.log(error);
         },
         refresh(){
-            console.log("refresh");
+            console.log("refreshing...");
+            this.betActive = true;
+            this.dbError = false;
         }
     }
 }
