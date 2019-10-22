@@ -88,6 +88,7 @@ export default {
                 this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
                     let predArray = myPred.data.response;
+                    /*
                     if(predArray.length){
                         tableFields.push({
                             key: 'prediction',
@@ -95,6 +96,7 @@ export default {
                             label: 'Pronostico'
                             });
                         }
+                        */
                     for (let i=0; i<10; i++) {
                         let matchDateTS = new Date(teams[i].dateEvent + " " + teams[i].strTime);
                         let tableItem = {
@@ -140,7 +142,7 @@ export default {
     beforeDestroy(){
         this.tableData.items = null;
         tableItems = [];
-        if(tableFields.length == 5) tableFields.pop();
+        //if(tableFields.length == 5) tableFields.pop();
     },
 
     methods: {
@@ -159,14 +161,17 @@ export default {
         sendMatches(){
             this.widgetData.sendSpinner = true;
             for(let i=0; i<10; i++){
-                if(this.sendMatchesData.bet1x2[i] && this.sendMatchesData.correctResult[i]) {
-                    if(this.sendMatchesData.bet1x2[i] == 3)
-                        this.sendMatchesData.templatePostMatches[i].bet1x2 = 0;
-
-                    else this.sendMatchesData.templatePostMatches[i].bet1x2 = this.sendMatchesData.bet1x2[i];
+                if(this.sendMatchesData.bet1x2[i]) {
+                    this.sendMatchesData.templatePostMatches[i].bet1x2 = this.sendMatchesData.bet1x2[i];
+                    }
+                if(this.sendMatchesData.correctResult[i]) {
                     this.sendMatchesData.templatePostMatches[i].homeGoals = this.sendMatchesData.correctResult[i][0];
                     this.sendMatchesData.templatePostMatches[i].awayGoals = this.sendMatchesData.correctResult[i][1];
+                    }
+                if(this.sendMatchesData.templatePostMatches[i].bet1x2 || this.sendMatchesData.templatePostMatches[i].homeGoals) {
+                    if(this.sendMatchesData.templatePostMatches[i].bet1x2 == 3) this.sendMatchesData.templatePostMatches[i].bet1x2 = 0;
                     this.sendMatchesData.postMatches.request.push(this.sendMatchesData.templatePostMatches[i]);
+                    console.log(this.sendMatchesData.postMatches.request);
                     }
                 }
             const jwt = localStorage.getItem("jwt");
