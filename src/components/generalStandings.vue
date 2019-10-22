@@ -25,10 +25,11 @@ export default{
         }};
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/standings", options)
         .then( standings =>{
+            // eslint-disable-next-line
             console.log(standings);
             for(let i =0; i<standings.data.response.length; i++) {
                 let tableItem = {
-                    "giocatore": standings.data.response[i].utente.username,
+                    "giocatore": standings.data.response[i].utente.username.toUpperCase(),
                     "punti": standings.data.response[i].points,
                 }
                 tableItems.push(tableItem);
@@ -51,7 +52,8 @@ let tableFields = [
     {
       key: 'punti',
       sortable: false,
-      label: 'Punti'
+      label: 'Punti',
+      sortDirection: 'desc'
     }
   ];
 </script>

@@ -18,12 +18,12 @@
             <b-spinner v-if="widgetData.sendSpinner" variant="success" label="Spinning" ></b-spinner>
             <b-button v-if="!widgetData.sendSpinner && !widgetData.tableLoadingSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
             <b-modal size="lg" ok-only ref="submitModal" title="Scommessa Inserita!">
-                <h2>Scommesse Nuove</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.created.length">Created!</p>
+                 <h2>Scommesse Nuove</h2>
+                <p :key="i" v-for="i in sendMatchesData.sendDataResponse.created.length">Created!</p>
                 <h2>Scommesse Aggiornate</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.updated.length">Updated!</p>
+                <p  :key="i" v-for="i in sendMatchesData.sendDataResponse.updated.length">Updated!</p>
                 <h2>Scommesse Fallite perchè già iniziate</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.failed.length">Failed!</p>
+                <p  :key="i" v-for="i in sendMatchesData.sendDataResponse.failed.length">Failed!</p> 
             </b-modal>
         </div>
     </div>
@@ -95,12 +95,13 @@ export default {
                         });
                     }
                 for (let i =0; i<10; i++) {
+                    let date = new Date(teams[i].dateEvent + " " + teams[i].strTime);
                     let tableItem = {
                         "match": teams[i].strEvent,
                         "id": teams[i].idEvent,
                         "awayTeam" : teams[i].strAwayTeam,
                         "homeTeam" : teams[i].strHomeTeam,
-                        "matchDate" : teams[i].strDate,
+                        "matchDate" : date.toLocaleString(),
                         "matchTime" : teams[i].strTime,
                         "prediction" : ""
                     }
@@ -112,14 +113,15 @@ export default {
                     tableItems.push(tableItem);
 
                     //da creare New Date cit. ghiuttolo
-                    tableItems[i].matchDate += " " + tableItems[i].matchTime.substring(0, tableItems[i].matchTime.length -9);
-                    tableItems[i].matchDate = tableItems[i].matchDate.substring(0, 6) + "20" + tableItems[i].matchDate.substring(6, tableItems[i].matchDate.lenght);
+                    /* tableItems[i].matchDate += " " + tableItems[i].matchTime.substring(0, tableItems[i].matchTime.length -9);
+                    tableItems[i].matchDate = tableItems[i].matchDate.substring(0, 6) + "20" + tableItems[i].matchDate.substring(6, tableItems[i].matchDate.lenght); */
 
                     this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
                     this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
                     this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
                     this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
-                    this.sendMatchesData.templatePostMatches[i].matchDate = tableItems[i].matchDate;
+                    //TODO Vincent controllare che il nuovo formato non crei errore
+                    this.sendMatchesData.templatePostMatches[i].matchDate = date.toLocaleString();//tableItems[i].matchDate;
                     }
                 this.widgetData.tableLoadingSpinner = false;
                 });
