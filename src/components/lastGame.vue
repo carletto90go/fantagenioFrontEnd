@@ -16,6 +16,7 @@ export default{
         }
     },
     mounted(){
+        this.$emit("lastGameReady", false);
         const jwt = localStorage.getItem("jwt");
          const options = {
             method: 'GET',
@@ -26,7 +27,6 @@ export default{
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=8", options)
         .then( resultLastGame =>{
             // eslint-disable-next-line
-            console.log(resultLastGame);
             for(let i =0; i<resultLastGame.data.response.length; i++) {
                 let tableItem = {
                     "match": resultLastGame.data.response[i].homeTeam + "-" + resultLastGame.data.response[i].awayTeam,
@@ -34,10 +34,13 @@ export default{
                     "bet1x2": resultLastGame.data.response[i].bet1x2,
                     "winResult": resultLastGame.data.response[i].winResult,
                     "win1x2": resultLastGame.data.response[i].win1x2,
-
                 }
                 tableItems.push(tableItem);
                 }
+            this.$emit("lastGameReady", true);
+            })
+            .catch(e => {
+                this.$emit("dbError", e);
             });
     },
      beforeDestroy(){
