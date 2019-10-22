@@ -65,6 +65,7 @@ export default {
         }
     },
     mounted(){
+        this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
         const options = {
@@ -134,8 +135,15 @@ export default {
                         this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
                         this.sendMatchesData.templatePostMatches[i].matchDate = matchDateTS;
                         }
+                    this.$emit("betReady", true);
                     this.widgetData.tableLoadingSpinner = false;
+                    })
+                    .catch( e => {
+                        this.$emit("dbError", e);
                     });
+                })
+                .catch( e =>{
+                    this.$emit("dbError", e);
                 });
             });
         },

@@ -16,6 +16,7 @@ export default{
         }
     },
     mounted(){
+         this.$emit("standingsReady", false);
          const jwt = localStorage.getItem("jwt");
          const options = {
             method: 'GET',
@@ -25,8 +26,6 @@ export default{
         }};
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/standings", options)
         .then( standings =>{
-            // eslint-disable-next-line
-            console.log(standings);
             for(let i =0; i<standings.data.response.length; i++) {
                 let tableItem = {
                     "giocatore": standings.data.response[i].utente.username.toUpperCase(),
@@ -34,7 +33,11 @@ export default{
                 }
                 tableItems.push(tableItem);
                 }
-            });
+                this.$emit("standingsReady", true);
+            })
+        .catch(e=>{
+            this.$emit("dbError", e);
+        });
             
     },
      beforeDestroy(){
