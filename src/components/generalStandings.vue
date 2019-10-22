@@ -1,6 +1,9 @@
 <template>
     <div id="generalStandings">
-        <b-table  striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
+        <b-table id="table" striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
+         <template v-slot:cell(index)="data">
+                {{ data.index + 1 }}
+         </template>   
         </b-table>
     </div>    
 </template>
@@ -48,6 +51,11 @@ export default{
 let tableItems = [];
 let tableFields = [
      {
+      key: 'index',
+      sortable: false,
+      label: '#'
+    },
+     {
       key: 'giocatore',
       sortable: false,
       label: 'Giocatore'
@@ -60,3 +68,14 @@ let tableFields = [
     }
   ];
 </script>
+<style scoped>
+#generalStandings{
+  width:60%;
+  margin: 30px auto;
+  background:#F1F1F1;
+  padding-top:10px;
+  padding-left:40px;
+  padding-right:40px; 
+  
+}
+</style>

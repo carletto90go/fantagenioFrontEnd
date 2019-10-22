@@ -125,10 +125,6 @@ export default {
                         }
                         tableItems.push(tableItem);
 
-                        //da creare New Date cit. ghiuttolo
-//                        tableItems[i].matchDate += " " + tableItems[i].matchTime.substring(0, tableItems[i].matchTime.length -9);
-//                        tableItems[i].matchDate = tableItems[i].matchDate.substring(0, 6) + "20" + tableItems[i].matchDate.substring(6, tableItems[i].matchDate.lenght);
-
                         this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
                         this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
                         this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
