@@ -6,10 +6,10 @@
         <div class="text-center">
             <b-table v-if="!widgetData.tableLoadingSpinner" striped hover responsive :items="tableData.items" :fields="tableData.fields">
                 <template v-slot:cell(correctResult)="row">
-                    <inputCompCorrectResult :parentIndex="row.index" @listenerInputCorrectResult="inputCorrectResultFun" />
+                    <inputCompCorrectResult :parentIndex="row.index" :parentMatch="{ started : tableData.items[row.index].started, prediction : tableData.items[row.index].predictionCR }" @listenerInputCorrectResult="inputCorrectResultFun" />
                 </template>
                 <template v-slot:cell(bet1x2)="row">
-                    <inputComp1x2 :parentIndex="row.index" @listenerInput1x2="input1x2Fun" />
+                    <inputComp1x2 :parentIndex="row.index" :parentMatch="{ started : tableData.items[row.index].started, prediction : tableData.items[row.index].prediction }" @listenerInput1x2="input1x2Fun" />
                 </template>
             </b-table>
             <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
@@ -19,11 +19,11 @@
             <b-button v-if="!widgetData.sendSpinner && !widgetData.tableLoadingSpinner" class="buttonInvio" variant="success" type="button" v-on:click="sendMatches()" >INVIO SCOMMESSA</b-button>
             <b-modal size="lg" ok-only ref="submitModal" title="Scommessa Inserita!">
                 <h2>Scommesse Nuove</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.created.length">Created!</p>
+                <p v-for="i in sendMatchesData.sendDataResponse.created.length" :key="i">Created!</p>
                 <h2>Scommesse Aggiornate</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.updated.length">Updated!</p>
+                <p v-for="i in sendMatchesData.sendDataResponse.updated.length" :key="i">Updated!</p>
                 <h2>Scommesse Fallite perchè già iniziate</h2>
-                <p v-for="i in sendMatchesData.sendDataResponse.failed.length">Failed!</p>
+                <p v-for="i in sendMatchesData.sendDataResponse.failed.length" :key="i">Failed!</p>
             </b-modal>
         </div>
     </div>
@@ -73,55 +73,63 @@ export default {
             'Content-Type': 'application/json'
         }};
         this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
-        .then( responseMatch => {
-            let teams = responseMatch.data.events;
-            this.tableData.round = teams[0].intRound;
+        .then( responseNextMatch => {
+            this.tableData.round = responseNextMatch.data.events[0].intRound;
+            this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.tableData.round+"&s=1920", options)
+            .then( responseMatch => {
+                let teams = responseMatch.data.events;
+                const jwt = localStorage.getItem("jwt");
+                const hiddenOptions = {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token' : jwt
+                    }};
+                this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
+                .then( myPred => {
+                    let predArray = myPred.data.response;
+                    if(predArray.length){
+                        tableFields.push({
+                            key: 'prediction',
+                            sortable: false,
+                            label: 'Pronostico'
+                            });
+                        }
+                    for (let i=0; i<10; i++) {
+                        let matchDateTS = new Date(teams[i].dateEvent + " " + teams[i].strTime);
+                        let tableItem = {
+                            "match": teams[i].strEvent,
+                            "id": teams[i].idEvent,
+                            "awayTeam" : teams[i].strAwayTeam,
+                            "homeTeam" : teams[i].strHomeTeam,
+                            "matchDate" : matchDateTS.toLocaleString(),
+                            "matchTime" : teams[i].strTime,
+                            "prediction" : null,
+                            "predictionCR": null,
+                            "started": false
+                        }
+                        for(let j=0; j < predArray.length; j++){
+                            if(predArray[j].idMatch == parseInt(teams[i].idEvent)) {
+                                tableItem.predictionCR = [ predArray[j].homeGoals, predArray[j].awayGoals ];
+                                tableItem.prediction = predArray[j].bet1x2;
+                                if(!tableItem.prediction) tableItem.prediction="X";
+                                }
+                        }
+                        matchDateTS = matchDateTS.getTime();
+                        let currentDateTS = Date.now();
+                        if(matchDateTS<currentDateTS) {
+                            tableItem.started = true;
+                        }
+                        tableItems.push(tableItem);
 
-            const jwt = localStorage.getItem("jwt");
-            const hiddenOptions = {
-                method: 'GET',
-                headers: {
-                'Content-Type': 'application/json',
-                'auth-token' : jwt
-                }};
-            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
-            .then( myPred => {
-                let predArray = myPred.data.response;
-                if(predArray.length){
-                    tableFields.push({
-                        key: 'prediction',
-                        sortable: false,
-                        label: 'Pronostico'
-                        });
-                    }
-                for (let i =0; i<10; i++) {
-                    let tableItem = {
-                        "match": teams[i].strEvent,
-                        "id": teams[i].idEvent,
-                        "awayTeam" : teams[i].strAwayTeam,
-                        "homeTeam" : teams[i].strHomeTeam,
-                        "matchDate" : teams[i].strDate,
-                        "matchTime" : teams[i].strTime,
-                        "prediction" : ""
-                    }
-                    for(let j=0; j < predArray.length; j++){
-                        if(predArray[j].idMatch == parseInt(teams[i].idEvent)) tableItem.prediction = predArray[j].bet1x2;
-                    }
-
-
-                    tableItems.push(tableItem);
-
-                    //da creare New Date cit. ghiuttolo
-                    tableItems[i].matchDate += " " + tableItems[i].matchTime.substring(0, tableItems[i].matchTime.length -9);
-                    tableItems[i].matchDate = tableItems[i].matchDate.substring(0, 6) + "20" + tableItems[i].matchDate.substring(6, tableItems[i].matchDate.lenght);
-
-                    this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
-                    this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
-                    this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
-                    this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
-                    this.sendMatchesData.templatePostMatches[i].matchDate = tableItems[i].matchDate;
-                    }
-                this.widgetData.tableLoadingSpinner = false;
+                        this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
+                        this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
+                        this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
+                        this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
+                        this.sendMatchesData.templatePostMatches[i].matchDate = tableItems[i].matchDate;
+                        }
+                    this.widgetData.tableLoadingSpinner = false;
+                    });
                 });
             });
         },

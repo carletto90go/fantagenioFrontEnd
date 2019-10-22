@@ -27,8 +27,8 @@
         data() {
             return {
                 input: {
-                    username: "carlo",
-                    password: "manu19",
+                    username: "",
+                    password: "",
                     output: "",
                     showAlert: false,
                     spinner: false
