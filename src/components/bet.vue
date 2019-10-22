@@ -104,7 +104,7 @@ export default {
                             "id": teams[i].idEvent,
                             "awayTeam" : teams[i].strAwayTeam,
                             "homeTeam" : teams[i].strHomeTeam,
-                            "matchDate" : matchDateTS,
+                            "matchDate" : matchDateTS.toLocaleString(),
                             "matchTime" : teams[i].strTime,
                             "prediction" : null,
                             "predictionCR": null,
@@ -128,7 +128,7 @@ export default {
                         this.sendMatchesData.templatePostMatches[i].homeTeam = teams[i].strHomeTeam;
                         this.sendMatchesData.templatePostMatches[i].awayTeam = teams[i].strAwayTeam;
                         this.sendMatchesData.templatePostMatches[i].round = parseInt(teams[i].intRound);
-                        this.sendMatchesData.templatePostMatches[i].matchDate = tableItems[i].matchDate;
+                        this.sendMatchesData.templatePostMatches[i].matchDate = matchDateTS;
                         }
                     this.widgetData.tableLoadingSpinner = false;
                     });
@@ -165,9 +165,7 @@ export default {
                     this.sendMatchesData.templatePostMatches[i].awayGoals = this.sendMatchesData.correctResult[i][1];
                     }
                 if(this.sendMatchesData.templatePostMatches[i].bet1x2 || this.sendMatchesData.templatePostMatches[i].homeGoals) {
-                    if(this.sendMatchesData.templatePostMatches[i].bet1x2 == 3) this.sendMatchesData.templatePostMatches[i].bet1x2 = 0;
                     this.sendMatchesData.postMatches.request.push(this.sendMatchesData.templatePostMatches[i]);
-                    console.log(this.sendMatchesData.postMatches.request);
                     }
                 }
             const jwt = localStorage.getItem("jwt");
