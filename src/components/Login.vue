@@ -2,17 +2,17 @@
     <div id="login">
         <div class="text-center">
             <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
+            <b-alert variant="danger"  label="Text Centered" :show="input.showAlertGenerico">ERRORE CONNESSIONE! CONTATTA HELPDESK</b-alert>
         </div>
    <div>      
             <h1 class="titolo">BENVENUTO </h1>
         </div>
         <div class="form" >
-            <b-form>
-                   <b-img center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>   
-
-            <label>Username:</label>
+            <b-form>       
+            <b-img center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>   
+            <!-- <label class="label">Username:</label> -->
             <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
-            <label for="text-password">Password:</label>
+            <!-- <label class="label" for="text-password">Password:</label> -->
             <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
             <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="login()">Accedi</b-button>
             </b-form>
@@ -34,7 +34,8 @@
                     password: "",
                     output: "",
                     showAlert: false,
-                    spinner: false
+                    spinner: false,
+                    showAlertGenerico: false
                 }
             }
         },
@@ -62,11 +63,13 @@
                       this.$router.push({ name: "ourNavBar" });
                     })
                     .catch(function (error) {
+                     // eslint-disable-next-line  
+                     console.error(error); 
                      object.input.spinner = false;
                      object.input.showAlert = true;
                     });
                 } else {
-                   this.input.showAlert = true; //    console.log("The username and / or password is incorrect");
+                  this.input.showAlertGenerico = true; //    console.log("The username and / or password is incorrect");
                     }
             }
         }
@@ -79,6 +82,9 @@
   padding: 8% 0 0;
   margin: auto;
 }
+.label{
+  text-align: left;
+}
 .form {
   position: relative;
   z-index: 1;
@@ -86,7 +92,6 @@
   max-width: 360px;
   margin: 0 auto 100px;
   padding: 45px;
-  text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 .form input {
