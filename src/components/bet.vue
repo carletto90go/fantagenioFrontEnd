@@ -102,7 +102,7 @@ export default {
                             "id": teams[i].idEvent,
                             "awayTeam" : teams[i].strAwayTeam,
                             "homeTeam" : teams[i].strHomeTeam,
-                            "matchDate" : matchDateTS.toLocaleString(),
+                            "matchDate" : matchDateTS,
                             "matchTime" : teams[i].strTime,
                             "prediction" : null,
                             "predictionCR": null,
