@@ -1,10 +1,11 @@
 <template>
-    <div id="generalStandings">
-        <b-table id="table" striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
+    <div id="generalStandings" class="text-center">
+        <b-table v-if="!widgetData.tableLoadingSpinner" id="table" striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
          <template v-slot:cell(index)="data">
                 {{ data.index + 1 }}
          </template>   
         </b-table>
+        <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
     </div>    
 </template>
 <script>
@@ -12,6 +13,9 @@ export default{
     name: 'generalStandings',
     data(){
         return{
+            widgetData : {
+                tableLoadingSpinner : false
+            },
             tableDataStandings:{
                 items: tableItems,
                 fields: tableFields
@@ -19,6 +23,7 @@ export default{
         }
     },
     mounted(){
+        this.widgetData.tableLoadingSpinner = true;
          this.$emit("standingsReady", false);
          const jwt = localStorage.getItem("jwt");
          const options = {
@@ -29,16 +34,18 @@ export default{
         }};
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/standings", options)
         .then( standings =>{
+            standings.data.response.sort( function(a,b){ return b.points - a.points } );
             for(let i =0; i<standings.data.response.length; i++) {
                 let tableItem = {
                     "giocatore": standings.data.response[i].utente.username.toUpperCase(),
                     "punti": standings.data.response[i].points,
-                }
+                    }
                 tableItems.push(tableItem);
                 }
                 this.$emit("standingsReady", true);
+                this.widgetData.tableLoadingSpinner = false;
             })
-        .catch(e=>{
+        .catch( e =>{
             this.$emit("dbError", e);
         });
             
@@ -46,7 +53,7 @@ export default{
      beforeDestroy(){
         this.tableDataStandings.items = null;
         tableItems = [];
-    }
+        }
     }
 let tableItems = [];
 let tableFields = [
@@ -64,7 +71,7 @@ let tableFields = [
       key: 'punti',
       sortable: false,
       label: 'Punti',
-      sortDirection: 'desc'
+      sortDirection: 'desc' //non funziona sta roba
     }
   ];
 </script>
@@ -75,7 +82,6 @@ let tableFields = [
   background:#F1F1F1;
   padding-top:10px;
   padding-left:40px;
-  padding-right:40px; 
-  
+  padding-right:40px;
 }
 </style>
