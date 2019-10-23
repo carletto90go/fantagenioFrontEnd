@@ -1,5 +1,5 @@
 <template>
-    <div id="ourNavBar">
+    <div id="ourNavBar" class="text-center">
             <b-card title="Card Title" no-body>
                 <b-card-header header-tag="nav">
                     <b-nav>
