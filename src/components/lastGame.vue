@@ -1,5 +1,7 @@
 <template>
     <div id="lastgame" class="text-center">
+       <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.round" @change="roundSelect" :options="select.optionsRound" size="sm" class="mt-3" />
+       <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.user" @change="userSelect" :options="select.optionsUser" size="sm" class="mt-3" />
        <b-table v-if="!widgetData.tableLoadingSpinner" striped hover responsive :items="tableDataLastGame.items" :fields="tableDataLastGame.fields">
        </b-table>
        <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
@@ -11,10 +13,16 @@ export default{
     name: 'lastgame',
     data(){
         return{
+            select : {
+                optionsRound : [],
+                optionsUser : [],
+                optionsUserId : [],
+                user : 1,
+                round : 1
+            },
             widgetData : {
                 tableLoadingSpinner : false
             },
-            round : 1,
             tableDataLastGame:{
                 items: tableItems,
                 fields: tableFields
@@ -33,13 +41,23 @@ export default{
         }};
         this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction", options)
         .then( resultLastGame =>{
-            this.round = resultLastGame.data.response[0].round;
+            this.select.round = resultLastGame.data.response[0].round;
+            for(let i = 1; i<=this.select.round; i++) this.select.optionsRound.push(i);
+
+            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/users", options)
+            .then( users => {
+                users.data.response.forEach( user => {
+                    this.select.user = resultLastGame.data.response[0].utente;
+                    this.select.optionsUserId.push({ username : user.username, userId : user.id });
+                    this.select.optionsUser.push(user.username);
+                });
+            });
             const optionsThe = {
                         method: 'GET',
                         headers: {
                         'Content-Type': 'application/json',
                     }};
-            this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.round+"&s=1920", optionsThe)
+            this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.select.round+"&s=1920", optionsThe)
             .then( theSportsDb => {
                 for(let i = 0; i<theSportsDb.data.events.length; i++) {
                     let tableItem = {
@@ -50,7 +68,6 @@ export default{
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
                             tableItem.bet1x2 = match.bet1x2;
-                            console.log(match);
                             tableItem.points = 0;
                             if(match.win1x2) tableItem.points += 1;
                             if(match.winResult) tableItem.points += 3;
@@ -70,6 +87,63 @@ export default{
      beforeDestroy(){
         this.tableDataLastGame.items = null;
         tableItems = [];
+    },
+
+    methods : {
+        roundSelect() {
+            let i=0;
+            while (this.select.optionsUserId[i].username != this.select.user) i++;
+            this.executeGet(this.select.round, this.select.optionsUserId[i].userId);
+        },
+        userSelect() {
+            let i=0;
+            while (this.select.optionsUserId[i].username != this.select.user) i++;
+            this.executeGet(this.select.round, this.select.optionsUserId[i].userId);
+        },
+        executeGet( round, user ) {
+            this.tableDataLastGame.items = [];
+            this.$emit("lastGameReady", false);
+            this.widgetData.tableLoadingSpinner = true;
+            const jwt = localStorage.getItem("jwt");
+            const options = {
+                method: 'GET',
+                headers: {
+                'Content-Type': 'application/json',
+                'auth-token' : jwt
+            }};
+            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/prediction/"+user+"?round="+round, options)
+            .then( resultLastGame =>{
+                const optionsThe = {
+                    method: 'GET',
+                    headers: {
+                    'Content-Type': 'application/json',
+                }};
+                this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+round+"&s=1920", optionsThe)
+                .then( theSportsDb => {
+                    for(let i = 0; i<theSportsDb.data.events.length; i++) {
+                        let tableItem = {
+                        "match": theSportsDb.data.events[i].strEvent,
+                        "resultCorrect": theSportsDb.data.events[i].intHomeScore + " - " + theSportsDb.data.events[i].intAwayScore
+                        }
+                        resultLastGame.data.response.forEach( match => {
+                            if(match.idMatch == theSportsDb.data.events[i].idEvent){
+                                tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
+                                tableItem.bet1x2 = match.bet1x2;
+                                tableItem.points = 0;
+                                if(match.win1x2) tableItem.points += 1;
+                                if(match.winResult) tableItem.points += 3;
+                                }
+                            });
+                        this.tableDataLastGame.items.push(tableItem);
+                    }
+                    this.$emit("lastGameReady", true);
+                    this.widgetData.tableLoadingSpinner = false;
+                    });
+                })
+                .catch(e => {
+                    this.$emit("dbError", e);
+                });
+            }
     }
 }
 let tableItems = [];
