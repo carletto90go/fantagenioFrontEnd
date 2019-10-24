@@ -67,7 +67,8 @@ export default{
                     resultLastGame.data.response.forEach( match => {
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                            tableItem.bet1x2 = match.bet1x2;
+                            if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
+                               else {tableItem.bet1x2 = "X";}
                             tableItem.points = 0;
                             if(match.win1x2) tableItem.points += 1;
                             if(match.winResult) tableItem.points += 3;
@@ -128,7 +129,8 @@ export default{
                         resultLastGame.data.response.forEach( match => {
                             if(match.idMatch == theSportsDb.data.events[i].idEvent){
                                 tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                                tableItem.bet1x2 = match.bet1x2;
+                               if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
+                               else {tableItem.bet1x2 = "X";}
                                 tableItem.points = 0;
                                 if(match.win1x2) tableItem.points += 1;
                                 if(match.winResult) tableItem.points += 3;
