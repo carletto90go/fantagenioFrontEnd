@@ -76,12 +76,12 @@ let tableFields = [
   ];
 </script>
 <style scoped>
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 #generalStandings{
   width:60%;
   margin: 30px auto;
-  background:#F1F1F1;
-  padding-top:10px;
-  padding-left:40px;
-  padding-right:40px;
+  background: transparent;
+  padding:10px 0 0 0;
+
 }
 </style>

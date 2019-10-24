@@ -67,7 +67,8 @@ export default{
                     resultLastGame.data.response.forEach( match => {
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                            tableItem.bet1x2 = match.bet1x2;
+                            if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
+                               else {tableItem.bet1x2 = "X";}
                             tableItem.points = 0;
                             if(match.win1x2) tableItem.points += 1;
                             if(match.winResult) tableItem.points += 3;
@@ -128,7 +129,8 @@ export default{
                         resultLastGame.data.response.forEach( match => {
                             if(match.idMatch == theSportsDb.data.events[i].idEvent){
                                 tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                                tableItem.bet1x2 = match.bet1x2;
+                               if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
+                               else {tableItem.bet1x2 = "X";}
                                 tableItem.points = 0;
                                 if(match.win1x2) tableItem.points += 1;
                                 if(match.winResult) tableItem.points += 3;
@@ -177,12 +179,39 @@ let tableFields = [
 </script>
 
 <style scoped>
+
 #lastgame{
-  width:60%;
+  width:100%;
   margin: 30px auto;
-  background:#F1F1F1;
-  padding-top:10px;
-  padding-left:40px;
-  padding-right:40px;
+  background: transparent;
+  padding: 0 0 0 0;
 }
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) { 
+    #lastgame{
+      width:100%;
+    }
+ }
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) { 
+       #lastgame{
+      width:100%;
+    }
+}
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+       #lastgame{
+      width:80%;
+    }
+ }
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { 
+       #lastgame{
+      width:70%;
+    }
+
+ }
 </style>
