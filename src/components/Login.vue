@@ -4,15 +4,10 @@
             <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
             <b-alert variant="danger"  label="Text Centered" :show="input.showAlertGenerico">ERRORE CONNESSIONE! CONTATTA HELPDESK</b-alert>
         </div>
-   <div>      
-            <h1 class="titolo">BENVENUTO </h1>
-        </div>
         <div class="form" >
             <b-form>       
-            <b-img center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>   
-            <!-- <label class="label">Username:</label> -->
+            <b-img class="img" center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>    
             <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
-            <!-- <label class="label" for="text-password">Password:</label> -->
             <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
             <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="login()">Accedi</b-button>
             </b-form>
@@ -59,7 +54,8 @@
                         }
                     })
                     .then( response => {
-                      localStorage.setItem("jwt", response.data);
+                      localStorage.setItem("username", response.data.response.username);
+                      localStorage.setItem("jwt", response.data.response.jwt);
                       this.$router.push({ name: "ourNavBar" });
                     })
                     .catch(function (error) {
@@ -90,8 +86,8 @@
   z-index: 1;
   background: #FFFFFF;
   max-width: 360px;
-  margin: 0 auto 100px;
-  padding: 45px;
+  margin: 5% auto 100px;
+  padding: 10px 45px  45px  45px;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 .form input {
@@ -109,7 +105,7 @@
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #525eb8;
+  background:  #023a5b;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -131,9 +127,7 @@
   color: #4CAF50;
   text-decoration: none;
 }
-.form .register-form {
-  display: none;
-}
+
 .container {
   position: relative;
   z-index: 1;
@@ -171,7 +165,7 @@
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
   outline: 0;
-  background: #525eb8;
+  background: #023a5b;
   width: 100%;
   border: 0;
   padding: 15px;
@@ -181,5 +175,9 @@
   transition: all 0.3 ease;
   cursor: pointer;
   text-align: center;
+}
+.img{
+  margin: 15px;
+  padding: 15px;
 }
 </style>

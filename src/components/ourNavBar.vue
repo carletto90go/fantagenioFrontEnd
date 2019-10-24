@@ -1,17 +1,18 @@
 <template>
+    <!-- https://github.com/carletto90go/fantagenioFrontEnd.git -->
     <div id="ourNavBar" class="text-center">
             <b-card title="Card Title" no-body>
                 <b-card-header header-tag="nav">
                     <b-nav>
                         <b-img src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>
-                        <b-nav-item v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item>
+                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item></h4>
                         <b-nav-item v-if="!showButton" disabled>INSERISCI SCOMMESSA</b-nav-item>
-                        <b-nav-item v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item>
+                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item></h4>
                         <b-nav-item v-if="!showButton" disabled>GIORNATA PRECEDENTE</b-nav-item>
-                        <b-nav-item v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item>
-                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>
-                           
-                        <b-nav-item><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
+                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item></h4>
+                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>   
+                        <label class="labelNome"> Ciao, {{username}} </label>
+                        <b-nav-item> <b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
                     </b-nav>
                 </b-card-header>
             </b-card>
@@ -35,7 +36,8 @@ export default {
                     betActive : true,
                     precActive: false,
                     standingsActive: false,
-                    dbError: false
+                    dbError: false,
+                    username:""
                 };
         },
         components: {
@@ -46,10 +48,15 @@ export default {
     mounted(){
         if(!localStorage.getItem("jwt"))
             this.$router.push({ name: "login" });
+            else{
+                this.username = localStorage.getItem("username");
+
+            }
            },
     methods: {
         logout: function() {
             localStorage.removeItem("jwt");
+            localStorage.removeItem("username");
             this.$router.push({ name: "login" });
             },
         clickScommessa() {
@@ -89,3 +96,12 @@ export default {
     }
 }
 </script>
+<style scoped>
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
+.labelNome{
+    text-align: right;
+}
+.menuSingolo{
+    margin-top: 55px;
+}
+</style>
