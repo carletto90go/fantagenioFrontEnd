@@ -17,7 +17,7 @@
                                 <b-nav-item-dropdown right>
                                 <!-- Using 'button-content' slot -->
                                 <template class="labelNome" v-slot:button-content>
-                                    <b-button>{{username.toUpperCase()}}</b-button>
+                                    <b-button>{{username}}</b-button>
                                 </template>
                                 <b-dropdown-item><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
                                 </b-nav-item-dropdown> 
