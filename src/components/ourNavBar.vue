@@ -13,10 +13,10 @@
                         <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>  
                                 <b-nav-item-dropdown right>
                                 <!-- Using 'button-content' slot -->
-                                <template v-slot:button-content>
-                                    <em class="labelNome">CIAO, {{username.toUpperCase()}}</em>
+                                <template class="labelNome" v-slot:button-content>
+                                    <b-button>{{username.toUpperCase()}}</b-button>
                                 </template>
-                                <b-dropdown-item href="#"><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
+                                <b-dropdown-item><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
                                 </b-nav-item-dropdown> 
                         </b-nav>
                 <!-- </b-card-header> -->
@@ -24,7 +24,7 @@
             <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
-            <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
+            <b-button variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
 
@@ -91,9 +91,11 @@ export default {
             if(this.betActive) return this.betActive = false;
             if(this.standingsActive) return this.standingsActive = false;
             if(this.precActive) return this.precActive = false;
+            // eslint-disable-next-line
             console.log(error);
         },
         refresh(){
+            // eslint-disable-next-line
             console.log("refreshing...");
             this.betActive = true;
             this.dbError = false;
@@ -105,8 +107,9 @@ export default {
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 .labelNome{
     text-align: right;
+    text-decoration-color: black;
 }
 .menuSingolo{
-    margin-top: 55px;
+    margin-top: 55px; 
 }
 </style>
