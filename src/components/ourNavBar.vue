@@ -2,24 +2,29 @@
     <!-- https://github.com/carletto90go/fantagenioFrontEnd.git -->
     <div id="ourNavBar" class="text-center">
             <b-card title="Card Title" no-body>
-                <b-card-header header-tag="nav">
+                <!-- <b-card-header header-tag="nav"> -->
                     <b-nav>
                         <b-img src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>
-                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item></h4>
+                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item></h6>
                         <b-nav-item v-if="!showButton" disabled>INSERISCI SCOMMESSA</b-nav-item>
-                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item></h4>
+                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item></h6>
                         <b-nav-item v-if="!showButton" disabled>GIORNATA PRECEDENTE</b-nav-item>
-                        <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item></h4>
-                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>   
-                        <label class="labelNome"> Ciao, {{username}} </label>
-                        <b-nav-item> <b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-nav-item>
-                    </b-nav>
-                </b-card-header>
+                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item></h6>
+                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>  
+                                <b-nav-item-dropdown right>
+                                <!-- Using 'button-content' slot -->
+                                <template v-slot:button-content>
+                                    <em class="labelNome">CIAO, {{username.toUpperCase()}}</em>
+                                </template>
+                                <b-dropdown-item href="#"><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
+                                </b-nav-item-dropdown> 
+                        </b-nav>
+                <!-- </b-card-header> -->
             </b-card>
             <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
-            <b-button v-if="dbError" type="button" v-on:click="refresh">TRY AGAIN</b-button>
+            <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
 
