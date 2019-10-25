@@ -8,7 +8,9 @@
             <b-form>       
             <b-img class="img" center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>    
             <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
-            <b-input type="password" name="password" size="lg" v-model="input.password"   placeholder="Inserisci password"></b-input>
+
+            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
+
             <b-button  v-if="!input.spinner" type="submit" size="lg" v-on:click="login()">Accedi</b-button>
             </b-form>
         </div>
@@ -39,6 +41,7 @@
                 this.$router.push({ name : "ourNavBar" });
         },
         methods: {
+
             //visualizzare password          
             // switchVisibility() {
             //     this.input.passwordFieldType = this.input.passwordFieldType === 'password' ? 'text' : 'password'

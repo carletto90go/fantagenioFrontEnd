@@ -9,8 +9,11 @@
                         <b-nav-item v-if="!showButton" disabled>INSERISCI SCOMMESSA</b-nav-item>
                         <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item></h6>
                         <b-nav-item v-if="!showButton" disabled>GIORNATA PRECEDENTE</b-nav-item>
+
                         <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item></h6>
-                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>  
+                        <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>
+                         <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-nav-item></h4>
+                        <b-nav-item v-if="!showButton" disabled>CAMBIA PASSWORD</b-nav-item>
                                 <b-nav-item-dropdown right>
                                 <!-- Using 'button-content' slot -->
                                 <template v-slot:button-content>
@@ -24,7 +27,11 @@
             <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
+
+            <changePwdComponent v-if="changePwdActive" @changePwdReady="betReady" @dbError="handlerDbError"/>
+
             <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
+
     </div>
 </template>
 
@@ -32,6 +39,7 @@
 import betComponent from './bet.vue';
 import standingsComponent from './generalStandings.vue';
 import precComponent from './lastGame.vue';
+import changePwdComponent from './changePwd.vue';
 
 export default {
     name: 'ourNavBar',
@@ -41,6 +49,7 @@ export default {
                     betActive : true,
                     precActive: false,
                     standingsActive: false,
+                    changePwdActive : false,
                     dbError: false,
                     username:""
                 };
@@ -48,14 +57,14 @@ export default {
         components: {
             betComponent,
             standingsComponent,
-            precComponent
+            precComponent,
+            changePwdComponent
         },
     mounted(){
         if(!localStorage.getItem("jwt"))
             this.$router.push({ name: "login" });
             else{
                 this.username = localStorage.getItem("username");
-
             }
            },
     methods: {
@@ -69,19 +78,29 @@ export default {
             this.betActive = true;
             this.precActive = false;
             this.standingsActive = false;
+            this.changePwdActive = false;
             },
         clickPrec() {
             if(!this.precActive) this.showButton = false;
             this.betActive = false;
             this.precActive = true;
             this.standingsActive = false;
+            this.changePwdActive = false;
             },
         clickStandings() {
             if(!this.standingsActive) this.showButton = false;
             this.betActive = false;
             this.precActive = false;
             this.standingsActive = true;
+            this.changePwdActive = false;
             },
+        clickChangePwd() {
+            if(!this.clickChangePwd) this.showButton = false;
+            this.betActive = false;
+            this.precActive = false;
+            this.standingsActive = false;
+            this.changePwdActive = true;
+        },
         betReady(dataFun){
             this.dbError = false;
             this.showButton = dataFun;
