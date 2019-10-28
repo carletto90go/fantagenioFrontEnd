@@ -190,7 +190,11 @@ export default {
                     this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
                     this.widgetData.sendSpinner = false;
+                    this.$emit("betReady", true);
                     this.toggleSubmitModal();
+                })
+                .catch(e => {
+                    this.$emit("dbError", e);
                 });
         }
     }
