@@ -2,7 +2,7 @@
     <div id="lastgame" class="text-center">
        <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.round" @change="roundSelect" :options="select.optionsRound" size="sm" class="mt-3" />
        <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.user" @change="userSelect" :options="select.optionsUser" size="sm" class="mt-3" />
-       <b-table v-if="!widgetData.tableLoadingSpinner" striped hover responsive :items="tableDataLastGame.items" :fields="tableDataLastGame.fields">
+       <b-table head-variant="light" v-if="!widgetData.tableLoadingSpinner" dark bordered small striped hover responsive :items="tableDataLastGame.items" :fields="tableDataLastGame.fields">
        </b-table>
        <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
     </div>    
@@ -187,7 +187,6 @@ let tableFields = [
 #lastgame{
   width:100%;
   margin: 30px auto;
-  background: transparent;
   padding: 0 0 0 0;
 }
 /* // Small devices (landscape phones, 576px and up) */

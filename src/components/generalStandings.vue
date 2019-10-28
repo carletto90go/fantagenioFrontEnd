@@ -1,6 +1,6 @@
 <template>
     <div id="generalStandings" class="text-center">
-        <b-table v-if="!widgetData.tableLoadingSpinner" id="table" striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
+        <b-table head-variant="light" v-if="!widgetData.tableLoadingSpinner" id="table"  small dark striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
          <template v-slot:cell(index)="data">
                 {{ data.index + 1 }}
          </template>   
@@ -80,7 +80,6 @@ let tableFields = [
 #generalStandings{
   width:60%;
   margin: 30px auto;
-  background: transparent;
   padding:10px 0 0 0;
 
 }

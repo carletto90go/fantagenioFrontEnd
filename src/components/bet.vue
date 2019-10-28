@@ -4,7 +4,7 @@
             <h1 align="center">Giornata Numero {{tableData.round}}</h1>
         </div>
         <div class="text-center">
-            <b-table v-if="!widgetData.tableLoadingSpinner" striped hover responsive :items="tableData.items" :fields="tableData.fields">
+            <b-table head-variant="light" v-if="!widgetData.tableLoadingSpinner"  small dark striped hover responsive :items="tableData.items" :fields="tableData.fields">
                 <template v-slot:cell(correctResult)="row">
                     <inputCompCorrectResult :parentIndex="row.index" :parentMatch="{ started : tableData.items[row.index].started, prediction : tableData.items[row.index].predictionCR }" @listenerInputCorrectResult="inputCorrectResultFun" />
                 </template>
