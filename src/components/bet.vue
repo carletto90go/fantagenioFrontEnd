@@ -99,7 +99,7 @@ export default {
                         }
                         */
                     for (let i=0; i<10; i++) {
-                        let matchDateTS = new Date(teams[i].dateEvent + " " + teams[i].strTime);
+                        let matchDateTS = new Date(teams[i].dateEvent + "T" + teams[i].strTime);
                         let tableItem = {
                             "match": teams[i].strEvent,
                             "id": teams[i].idEvent,
@@ -190,7 +190,6 @@ export default {
                     this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
                     this.widgetData.sendSpinner = false;
-                    this.$emit("betReady", true);
                     this.toggleSubmitModal();
                 })
                 .catch(e => {
