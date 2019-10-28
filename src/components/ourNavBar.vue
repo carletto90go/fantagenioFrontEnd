@@ -17,7 +17,7 @@
                                 <b-nav-item-dropdown right>
                                 <!-- Using 'button-content' slot -->
                                 <template class="labelNome" v-slot:button-content>
-                                    <b-button>{{username}}</b-button>
+                                    <b-button>{{username.toUpperCase()}}</b-button>
                                 </template>
                                 <b-dropdown-item><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
                                 </b-nav-item-dropdown> 
@@ -27,13 +27,8 @@
             <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
-
-
-            <changePwdComponent v-if="changePwdActive" @changePwdReady="betReady" @dbError="handlerDbError"/>
-
+            <changePwdComponent v-if="changePwdActive" @passChanged="betReady" @dbError="handlerDbError"/>
             <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
-
-
     </div>
 </template>
 
@@ -112,6 +107,7 @@ export default {
             if(this.betActive) return this.betActive = false;
             if(this.standingsActive) return this.standingsActive = false;
             if(this.precActive) return this.precActive = false;
+            if(this.changePwdActive) return this.changePwdActive = false;
             // eslint-disable-next-line
             console.log(error);
         },

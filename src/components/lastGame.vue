@@ -67,11 +67,13 @@ export default{
                     resultLastGame.data.response.forEach( match => {
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                            if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
-                               else {tableItem.bet1x2 = "X";}
+                            if(match.bet1x2 != 3){ tableItem.bet1x2 = match.bet1x2; }
+                            else { tableItem.bet1x2 = "X"; }
                             tableItem.points = 0;
-                            if(match.win1x2) tableItem.points += 1;
-                            if(match.winResult) tableItem.points += 3;
+                            if(match.win1x2) { tableItem._cellVariants = { bet1x2 : "success" }; tableItem.points += 1; }
+                            else tableItem._cellVariants = { bet1x2 : "danger" };
+                            if(match.winResult) { /*tableItem._cellVariants= { betCR : "success" }; */ tableItem.points += 3;  }
+                            //else tableItem._cellVariants= { betCR : "danger" };
                         }
                     });
 
@@ -129,11 +131,13 @@ export default{
                         resultLastGame.data.response.forEach( match => {
                             if(match.idMatch == theSportsDb.data.events[i].idEvent){
                                 tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
-                               if(match.bet1x2 != 3){tableItem.bet1x2 = match.bet1x2;}
-                               else {tableItem.bet1x2 = "X";}
+                                if(match.bet1x2 != 3) { tableItem.bet1x2 = match.bet1x2; }
+                                else {tableItem.bet1x2 = "X";}
                                 tableItem.points = 0;
-                                if(match.win1x2) tableItem.points += 1;
-                                if(match.winResult) tableItem.points += 3;
+                                if(match.win1x2) { tableItem._cellVariants = { bet1x2 : "success" }; tableItem.points += 1; }
+                                else { tableItem._cellVariants = { bet1x2 : "danger" }; }
+                                if(match.winResult) { /*tableItem._cellVariants = { betCR : "success" }; */ tableItem.points += 3; }
+                                //else tableItem._cellVariants = { betCR : "danger" };
                                 }
                             });
                         this.tableDataLastGame.items.push(tableItem);

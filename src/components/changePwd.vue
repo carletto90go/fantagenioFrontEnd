@@ -1,15 +1,15 @@
 <template>
     <div id="changePwd" class="form">
-        <b-form>
+        <b-form v-if="!passChanged">
             <b-img class="img" center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>
-            <b-input type="text" size="lg" name="username" v-model="username" placeholder="Inserisci username"></b-input>
             <b-input type="password" name="password" size="lg" v-model="oldPassword" placeholder="Vecchia password"></b-input>
             <b-input type="password" name="password" size="lg" v-model="newPassword" placeholder="Nuova password"></b-input>
             <b-input type="password" name="password" size="lg" v-model="newPassword2" placeholder="Ripeti nuova password"></b-input>
-            <b-button v-if="!spinner" type="button" size="lg" v-on:click="sendData()">Cambia password</b-button>
+            <b-button v-if="!spinner" type="submit" size="lg" v-on:click="sendData()">Cambia password</b-button>
             <b-spinner v-if="spinner" variant="success" label="Spinning" ></b-spinner>
             <b-alert v-model="error" variant="danger"  label="Text Centered" :show="error"></b-alert>
         </b-form>
+        <h1 v-if="passChanged">Password Cambiata Correttamente</h1>
     </div>
 </template>
 
@@ -23,25 +23,24 @@
         name: 'changePwd',
         data() {
             return {
-                username : null,
                 oldPassword : null,
                 newPassword : null,
                 newPassword2 : null,
                 error : null,
                 flagError : false,
-                spinner : false
+                spinner : false,
+                passChanged : false
                 }
             },
 
         mounted() {
-            console.log(process.env.VUE_APP_HASH_SECRET);
             if(!localStorage.getItem("jwt"))
                 this.$router.push({ name: "login" });
         },
         methods: {
             sendData(){
                 this.spinner = true;
-                if(!this.username || !this.oldPassword || !this.newPassword || !this.newPassword2 ) {
+                if(!this.oldPassword || !this.newPassword || !this.newPassword2 ) {
                     this.error = "Inserire tutti i dati";
                     this.flagError = true;
                     this.spinner= false;
@@ -63,17 +62,19 @@
                             };
                 let requestJson = {
                     request : {
-                        username : this.username,
                         oldPassword : this.oldPassword,
                         newPassword : this.newPassword
                     }
                 }
                 return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/changePwd", requestJson, options)
                 .then( response => {
-                    console.log(response);
-                    console.log(response.status);
                     this.spinner = false;
-                    });
+                    this.passChanged = true;
+                    this.$emit("passChanged", true);
+                    })
+                .catch(e => {
+                    this.$emit("dbError", e);
+                });
                 }
                 /*
                 let hashedPwd = crypt(this.newPassword, process.env.VUE_APP_HASH_SECRET);
