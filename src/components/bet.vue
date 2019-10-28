@@ -193,9 +193,9 @@ export default {
                     this.$emit("betReady", true);
                     this.toggleSubmitModal();
                 })
-                .catch(e) {
+                .catch(e => {
                     this.$emit("dbError", e);
-                };
+                });
         }
     }
 }
