@@ -66,7 +66,7 @@
                         newPassword : this.newPassword
                     }
                 }
-                return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/changePwd", requestJson, options)
+                return this.axios.post("https://hidden-ocean-91661-stage.herokuapp.com/api/user/changePwd", requestJson, options)
                 .then( response => {
                     this.spinner = false;
                     this.passChanged = true;

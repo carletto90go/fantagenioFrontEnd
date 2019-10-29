@@ -1,6 +1,6 @@
 <template>
     <div id="generalStandings" class="text-center">
-        <b-table v-if="!widgetData.tableLoadingSpinner" id="table" striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
+        <b-table class="Standings" head-variant="light" v-if="!widgetData.tableLoadingSpinner" id="table"  small dark striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
          <template v-slot:cell(index)="data">
                 {{ data.index + 1 }}
          </template>   
@@ -32,7 +32,7 @@ export default{
             'Content-Type': 'application/json',
             'auth-token' : jwt
         }};
-        this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/standings", options)
+        this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/standings", options)
         .then( standings =>{
             standings.data.response.sort( function(a,b){ return b.points - a.points } );
             for(let i =0; i<standings.data.response.length; i++) {
@@ -60,7 +60,7 @@ let tableFields = [
      {
       key: 'index',
       sortable: false,
-      label: '#'
+      label: 'Posizione'
     },
      {
       key: 'giocatore',
@@ -71,17 +71,12 @@ let tableFields = [
       key: 'punti',
       sortable: false,
       label: 'Punti',
-      sortDirection: 'desc' //non funziona sta roba
     }
   ];
 </script>
 <style scoped>
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
-#generalStandings{
-  width:60%;
-  margin: 30px auto;
-  background: transparent;
-  padding:10px 0 0 0;
-
+.Standings{
+    box-shadow: 0 14px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 </style>

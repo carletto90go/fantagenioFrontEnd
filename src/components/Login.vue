@@ -42,10 +42,6 @@
         },
         methods: {
 
-            //visualizzare password          
-            // switchVisibility() {
-            //     this.input.passwordFieldType = this.input.passwordFieldType === 'password' ? 'text' : 'password'
-            //  },
             login() {
                 this.input.showAlert = false;
                 this.input.showAlertGenerico = false;
@@ -53,13 +49,14 @@
                     let object = this;
                     this.input.spinner = true;
                     this.visible = true
-                    this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
-                        {
-                            "request":{
-                                username: this.input.username,
-                                password: this.input.password
-                            }
-                        })
+                    this.axios.post('https://hidden-ocean-91661-stage.herokuapp.com/login',
+                    {
+                        "request":{
+                            username: this.input.username,
+                            password: this.input.password
+                        }
+                    })
+
                     .then( response => {
                         localStorage.setItem("username", response.data.response.username);
                         localStorage.setItem("jwt", response.data.response.jwt);
