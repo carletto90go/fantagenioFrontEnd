@@ -86,7 +86,7 @@ export default {
                     'Content-Type': 'application/json',
                     'auth-token' : jwt
                     }};
-                this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
+                this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
                     let predArray = myPred.data.response;
                     /*
@@ -187,7 +187,7 @@ export default {
                     'auth-token' : jwt
                     }
             };
-            return this.axios.post("https://hidden-ocean-91661-stage.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
+            return this.axios.post( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/matches", this.sendMatchesData.postMatches, options)
             .then( response => {
                     this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
