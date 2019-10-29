@@ -1,10 +1,10 @@
 <template>
     <div id="bet">
         <div>
-            <h1 align="center">Giornata Numero {{tableData.round}}</h1>
+            <h1 align="center">Giornata {{tableData.round}}</h1>
         </div>
         <div class="text-center">
-            <b-table head-variant="light" v-if="!widgetData.tableLoadingSpinner"  small dark striped hover responsive :items="tableData.items" :fields="tableData.fields">
+            <b-table  class="tableCustom" head-variant="light" v-if="!widgetData.tableLoadingSpinner"  small dark striped hover responsive :items="tableData.items" :fields="tableData.fields">
                 <template v-slot:cell(correctResult)="row">
                     <inputCompCorrectResult :parentIndex="row.index" :parentMatch="{ started : tableData.items[row.index].started, prediction : tableData.items[row.index].predictionCR }" @listenerInputCorrectResult="inputCorrectResultFun" />
                 </template>
@@ -86,7 +86,7 @@ export default {
                     'Content-Type': 'application/json',
                     'auth-token' : jwt
                     }};
-                this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
+                this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
                     let predArray = myPred.data.response;
                     /*
@@ -100,12 +100,14 @@ export default {
                         */
                     for (let i=0; i<10; i++) {
                         let matchDateTS = new Date(teams[i].dateEvent + " " + teams[i].strTime);
+                        let strMatchDateTS = matchDateTS.toLocaleString();
+                        strMatchDateTS = strMatchDateTS.substring(0, strMatchDateTS.length - 3 );
                         let tableItem = {
                             "match": teams[i].strEvent,
                             "id": teams[i].idEvent,
                             "awayTeam" : teams[i].strAwayTeam,
                             "homeTeam" : teams[i].strHomeTeam,
-                            "matchDate" : matchDateTS.toLocaleString(),
+                            "matchDate" : strMatchDateTS,
                             "matchTime" : teams[i].strTime,
                             "prediction" : null,
                             "predictionCR": null,
@@ -185,7 +187,7 @@ export default {
                     'auth-token' : jwt
                     }
             };
-            return this.axios.post("https://hidden-ocean-91661.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
+            return this.axios.post("https://hidden-ocean-91661-stage.herokuapp.com/api/user/matches", this.sendMatchesData.postMatches, options)
             .then( response => {
                     this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
@@ -211,7 +213,7 @@ let tableFields = [
     {
       key: 'match',
       sortable: false,
-      label: 'Incontro'
+      label: 'Partita'
     },
     {
       key: 'correctResult',
@@ -225,12 +227,9 @@ let tableFields = [
 </script>
 
 <style scoped>
-    #bet {
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-        padding: 20px;
-        margin-top: 10px;
-    }
+.tableCustom{
+    box-shadow: 0 14px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+}
     #logout {
       align-content: right;
     }

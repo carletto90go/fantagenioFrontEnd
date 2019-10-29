@@ -11,11 +11,11 @@
                         <h6><b-button class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-button></h6>
                         <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>
 
-                                <b-nav-item-dropdown>
-                                    <template class="labelNome" v-slot:button-content>
+                                <b-nav-item-dropdown class="labelNome">
+                                    <template  v-slot:button-content>
                                         <b-button>{{username.toUpperCase()}}</b-button>
                                     </template>
-                                    <b-dropdown-item>                        
+                                    <b-dropdown-item >                        
                                         <b-button v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-button>
                                         <b-button v-if="!showButton" disabled>CAMBIA PASSWORD</b-button>
                                     </b-dropdown-item>
@@ -28,7 +28,7 @@
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
             <changePwdComponent v-if="changePwdActive" @passChanged="betReady" @dbError="handlerDbError"/>
-            <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
+            <b-button pill block size="lg" class="buttonServer" variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
 
@@ -130,13 +130,19 @@ export default {
     border-bottom: 2px solid #023a5b;
 
 }
+
 .labelNome{
     text-decoration-color: black;
+    position: relative;
+    left: 16%;
 }
 .menuSingolo{
     background-color: #023a5b;
     font-weight: bold;
     margin: 15% 0 0 15%; 
-    box-shadow:  3px 3px 3px #dedede;
+    box-shadow:  3px 3px 3px black;
+}
+.buttonServer{
+    align-content: center;
 }
 </style>

@@ -42,16 +42,12 @@
         },
         methods: {
 
-            //visualizzare password          
-            // switchVisibility() {
-            //     this.input.passwordFieldType = this.input.passwordFieldType === 'password' ? 'text' : 'password'
-            //  },
             login() {
                 if(this.input.username != "" && this.input.password != "") {
                     let object = this;
                     this.input.spinner = true;
                     this.visible = true
-                    this.axios.post('https://hidden-ocean-91661.herokuapp.com/login',
+                    this.axios.post('https://hidden-ocean-91661-stage.herokuapp.com/login',
                     {
                         "request":{
                             username: this.input.username,

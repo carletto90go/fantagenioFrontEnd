@@ -2,8 +2,11 @@
     <div id="lastgame" class="text-center">
        <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.round" @change="roundSelect" :options="select.optionsRound" size="sm" class="mt-3" />
        <b-form-select v-if="!widgetData.tableLoadingSpinner" v-model="select.user" @change="userSelect" :options="select.optionsUser" size="sm" class="mt-3" />
-       <b-table head-variant="light" v-if="!widgetData.tableLoadingSpinner" dark bordered small striped hover responsive :items="tableDataLastGame.items" :fields="tableDataLastGame.fields">
+       <b-table class="tabellaPrecedente" head-variant="light" v-if="!widgetData.tableLoadingSpinner" dark bordered small striped hover responsive :items="tableDataLastGame.items" :fields="tableDataLastGame.fields">
        </b-table>
+         <template v-if="!widgetData.tableLoadingSpinner">
+                <b-button class="legenda text-left" variant="info" @click="legenda('Legenda punti')" >Legenda punteggio</b-button>
+         </template>
        <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
     </div>    
 </template>
@@ -39,12 +42,12 @@ export default{
             'Content-Type': 'application/json',
             'auth-token' : jwt
         }};
-        this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/myPrediction", options)
+        this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/myPrediction", options)
         .then( resultLastGame =>{
             this.select.round = resultLastGame.data.response[0].round;
             for(let i = 1; i<=this.select.round; i++) this.select.optionsRound.push(i);
 
-            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/users", options)
+            this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/users", options)
             .then( users => {
                 users.data.response.forEach( user => {
                     this.select.user = resultLastGame.data.response[0].utente;
@@ -93,6 +96,13 @@ export default{
     },
 
     methods : {
+        legenda(variant = null) {
+        this.$bvToast.toast('Risultato Esatto : PT.3 -  1X2 : PT.1', {
+          title: ` ${variant || 'default'}`,
+          variant: variant,
+          solid: true
+        })
+      },
         roundSelect() {
             let i=0;
             while (this.select.optionsUserId[i].username != this.select.user) i++;
@@ -114,7 +124,7 @@ export default{
                 'Content-Type': 'application/json',
                 'auth-token' : jwt
             }};
-            this.axios.get("https://hidden-ocean-91661.herokuapp.com/api/user/prediction/"+user+"?round="+round, options)
+            this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/prediction/"+user+"?round="+round, options)
             .then( resultLastGame =>{
                 const optionsThe = {
                     method: 'GET',
@@ -177,44 +187,19 @@ let tableFields = [
     {
       key: 'points',
       sortable: false,
-      label: 'Punti Guadagnati'
+      label: 'Punteggio'
     }
   ];
 </script>
 
 <style scoped>
-
-#lastgame{
-  width:100%;
-  margin: 30px auto;
-  padding: 0 0 0 0;
+.legenda{
+    border-color: white;
+    background-color: #454d55;
+    box-shadow: #454d55
 }
-/* // Small devices (landscape phones, 576px and up) */
-@media (min-width: 576px) { 
-    #lastgame{
-      width:100%;
-    }
- }
-
-/* // Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) { 
-       #lastgame{
-      width:100%;
-    }
-}
-
-/* // Large devices (desktops, 992px and up) */
-@media (min-width: 992px) { 
-       #lastgame{
-      width:80%;
-    }
- }
-
-/* // Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) { 
-       #lastgame{
-      width:70%;
-    }
-
- }
+ .tabellaPrecedente{
+    margin-top: 20px;
+    box-shadow: 0 14px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
+} 
 </style>
