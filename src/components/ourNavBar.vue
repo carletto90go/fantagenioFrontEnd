@@ -1,34 +1,34 @@
 <template>
     <!-- https://github.com/carletto90go/fantagenioFrontEnd.git -->
-    <div id="ourNavBar" class="text-center">
-            <b-card title="Card Title" no-body>
-                <!-- <b-card-header header-tag="nav"> -->
-                    <b-nav>
+    <div id="ourNavBar">
+            <!-- <b-card title="Card Title" no-body> -->
+                    <b-nav class="masterNav">
                         <b-img src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>
-                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-nav-item></h6>
+                        <h6><b-button class="menuSingolo" v-if="showButton" v-on:click="clickScommessa">INSERISCI SCOMMESSA</b-button></h6>
                         <b-nav-item v-if="!showButton" disabled>INSERISCI SCOMMESSA</b-nav-item>
-                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-nav-item></h6>
+                        <h6><b-button class="menuSingolo" v-if="showButton" v-on:click="clickPrec">GIORNATA PRECEDENTE</b-button></h6>
                         <b-nav-item v-if="!showButton" disabled>GIORNATA PRECEDENTE</b-nav-item>
-
-                        <h6><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-nav-item></h6>
+                        <h6><b-button class="menuSingolo" v-if="showButton" v-on:click="clickStandings">CLASSIFICA GENERALE</b-button></h6>
                         <b-nav-item v-if="!showButton" disabled>CLASSIFICA GENERALE</b-nav-item>
-                         <h4><b-nav-item class="menuSingolo" v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-nav-item></h4>
-                        <b-nav-item v-if="!showButton" disabled>CAMBIA PASSWORD</b-nav-item>
-                                <b-nav-item-dropdown right>
-                                <!-- Using 'button-content' slot -->
-                                <template class="labelNome" v-slot:button-content>
-                                    <b-button>{{username.toUpperCase()}}</b-button>
-                                </template>
-                                <b-dropdown-item><b-button type="button" variant="outline-danger" v-on:click="logout()" >DISCONNETTI</b-button></b-dropdown-item>
+
+                                <b-nav-item-dropdown class="labelNome">
+                                    <template  v-slot:button-content>
+                                        <b-button>{{username.toUpperCase()}}</b-button>
+                                    </template>
+                                    <b-dropdown-item >                        
+                                        <b-button v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-button>
+                                        <b-button v-if="!showButton" disabled>CAMBIA PASSWORD</b-button>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item><b-button type="button" variant="danger" v-on:click="logout()" >DISCONNETTI</b-button>
+                                    </b-dropdown-item>
                                 </b-nav-item-dropdown> 
                         </b-nav>
-                <!-- </b-card-header> -->
-            </b-card>
+            <!-- </b-card> -->
             <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
             <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
             <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
             <changePwdComponent v-if="changePwdActive" @passChanged="betReady" @dbError="handlerDbError"/>
-            <b-button variant="outline-danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
+            <b-button pill block size="lg" class="buttonServer" variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
 
@@ -122,11 +122,27 @@ export default {
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+.masterNav{
+    width: 100%;
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+    background-color: #9cc938;
+    border-bottom: 2px solid #023a5b;
+
+}
+
 .labelNome{
-    text-align: right;
     text-decoration-color: black;
+    position: relative;
+    left: 16%;
 }
 .menuSingolo{
-    margin-top: 55px; 
+    background-color: #023a5b;
+    font-weight: bold;
+    margin: 15% 0 0 15%; 
+    box-shadow:  3px 3px 3px black;
+}
+.buttonServer{
+    align-content: center;
 }
 </style>
