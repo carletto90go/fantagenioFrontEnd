@@ -32,7 +32,7 @@ export default{
             'Content-Type': 'application/json',
             'auth-token' : jwt
         }};
-        this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/standings", options)
+        this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/standings", options)
         .then( standings =>{
             standings.data.response.sort( function(a,b){ return b.points - a.points } );
             for(let i =0; i<standings.data.response.length; i++) {

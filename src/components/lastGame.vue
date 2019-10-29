@@ -12,6 +12,7 @@
 </template>
 <script>
 // https://www.thesportsdb.com/api/v1/json/1/lookupevent.php?id=441613 event by event Id
+
 export default{
     name: 'lastgame',
     data(){
@@ -42,15 +43,15 @@ export default{
             'Content-Type': 'application/json',
             'auth-token' : jwt
         }};
-        this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/myPrediction", options)
+        this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction", options)
         .then( resultLastGame =>{
             this.select.round = resultLastGame.data.response[0].round;
-            for(let i = 1; i<=this.select.round; i++) this.select.optionsRound.push(i);
+            for(let i = 1; i<=this.select.round+1; i++) this.select.optionsRound.push(i);
 
-            this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/users", options)
+            this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/users", options)
             .then( users => {
                 users.data.response.forEach( user => {
-                    this.select.user = resultLastGame.data.response[0].utente;
+                    this.select.user = resultLastGame.data.response[0].utente; //utente loggato da myPred
                     this.select.optionsUserId.push({ username : user.username, userId : user.id });
                     this.select.optionsUser.push(user.username);
                 });
@@ -124,7 +125,7 @@ export default{
                 'Content-Type': 'application/json',
                 'auth-token' : jwt
             }};
-            this.axios.get("https://hidden-ocean-91661-stage.herokuapp.com/api/user/prediction/"+user+"?round="+round, options)
+            this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/prediction/"+user+"?round="+round, options)
             .then( resultLastGame =>{
                 const optionsThe = {
                     method: 'GET',
