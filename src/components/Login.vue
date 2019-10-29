@@ -43,6 +43,8 @@
         methods: {
 
             login() {
+                this.input.showAlert = false;
+                this.input.showAlertGenerico = false;
                 if(this.input.username != "" && this.input.password != "") {
                     let object = this;
                     this.input.spinner = true;
@@ -54,16 +56,16 @@
                             password: this.input.password
                         }
                     })
+
                     .then( response => {
-                      localStorage.setItem("username", response.data.response.username);
-                      localStorage.setItem("jwt", response.data.response.jwt);
-                      this.$router.push({ name: "ourNavBar" });
+                        localStorage.setItem("username", response.data.response.username);
+                        localStorage.setItem("jwt", response.data.response.jwt);
+                        this.$router.push({ name: "ourNavBar" });
                     })
-                    .catch(function (error) {
-                     // eslint-disable-next-line  
-                     console.error(error); 
-                     object.input.spinner = false;
-                     object.input.showAlert = true;
+                    .catch( function (error) {
+                        if(error.response.status == 403) object.input.showAlert = true;
+                        else object.input.showAlertGenerico = true;
+                        object.input.spinner = false;
                     });
                 } else {
                   this.input.showAlertGenerico = true; //    console.log("The username and / or password is incorrect");

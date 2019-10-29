@@ -99,7 +99,7 @@ export default {
                         }
                         */
                     for (let i=0; i<10; i++) {
-                        let matchDateTS = new Date(teams[i].dateEvent + " " + teams[i].strTime);
+                        let matchDateTS = new Date(teams[i].dateEvent + "T" + teams[i].strTime);
                         let strMatchDateTS = matchDateTS.toLocaleString();
                         strMatchDateTS = strMatchDateTS.substring(0, strMatchDateTS.length - 3 );
                         let tableItem = {
@@ -192,7 +192,6 @@ export default {
                     this.sendMatchesData.sendDataResponse = response.data;
                     this.sendMatchesData.postMatches = { request : [] };
                     this.widgetData.sendSpinner = false;
-                    this.$emit("betReady", true);
                     this.toggleSubmitModal();
                 })
                 .catch(e => {
