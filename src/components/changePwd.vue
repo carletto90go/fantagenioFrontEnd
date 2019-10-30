@@ -15,77 +15,65 @@
 
 <script>
 
-
-
-
-
-  export default {
-        name: 'changePwd',
-        data() {
-            return {
-                oldPassword : null,
-                newPassword : null,
-                newPassword2 : null,
-                error : null,
-                flagError : false,
-                spinner : false,
-                passChanged : false
-                }
-            },
-
-        mounted() {
-            if(!localStorage.getItem("jwt"))
-                this.$router.push({ name: "login" });
+export default {
+    name: 'changePwd',
+    data() {
+        return {
+            oldPassword : null,
+            newPassword : null,
+            newPassword2 : null,
+            error : null,
+            flagError : false,
+            spinner : false,
+            passChanged : false
+            }
         },
-        methods: {
-            sendData(){
-                this.spinner = true;
-                if(!this.oldPassword || !this.newPassword || !this.newPassword2 ) {
-                    this.error = "Inserire tutti i dati";
-                    this.flagError = true;
-                    this.spinner= false;
-                    return;
-                    }
-                if(this.newPassword != this.newPassword2){
-                    this.error = "Le password devono coincidere!";
-                    this.spinner = false;
-                    return;
-                    }
-                const jwt = localStorage.getItem("jwt");
-                const options = {
-                                method: 'POST',
-                                headers: {
-                                    'Access-Control-Allow-Origin' : '*',
-                                    'Content-Type': 'application/json',
-                                    'auth-token' : jwt
-                                    }
-                            };
-                let requestJson = {
-                    request : {
-                        oldPassword : this.oldPassword,
-                        newPassword : this.newPassword
-                    }
+
+    mounted() {
+        if(!localStorage.getItem("jwt"))
+            this.$router.push({ name: "login" });
+    },
+    methods: {
+        sendData(){
+            this.spinner = true;
+            if(!this.oldPassword || !this.newPassword || !this.newPassword2 ) {
+                this.error = "Inserire tutti i dati";
+                this.flagError = true;
+                this.spinner= false;
+                return;
                 }
-                return this.axios.post("https://hidden-ocean-91661-stage.herokuapp.com/api/user/changePwd", requestJson, options)
-                .then( response => {
-                    this.spinner = false;
-                    this.passChanged = true;
-                    this.$emit("passChanged", true);
-                    })
-                .catch(e => {
-                    this.$emit("dbError", e);
-                });
+            if(this.newPassword != this.newPassword2){
+                this.error = "Le password devono coincidere!";
+                this.spinner = false;
+                return;
                 }
-                /*
-                let hashedPwd = crypt(this.newPassword, process.env.VUE_APP_HASH_SECRET);
-                hashedPwd = hashedPwd.toString();
-                console.log(hashedPwd);
-                let clearPwd = enc(hashedPwd, process.env.VUE_APP_HASH_SECRET);
-                clearPwd = clearPwd.toString(CryptoJS.enc.Utf8);
-                console.log(clearPwd);
-                */
+            const jwt = localStorage.getItem("jwt");
+            const options = {
+                            method: 'POST',
+                            headers: {
+                                'Access-Control-Allow-Origin' : '*',
+                                'Content-Type': 'application/json',
+                                'auth-token' : jwt
+                                }
+                        };
+            let requestJson = {
+                request : {
+                    oldPassword : this.oldPassword,
+                    newPassword : this.newPassword
+                }
+            }
+            return this.axios.post(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/changePwd", requestJson, options)
+            .then( response => {
+                this.spinner = false;
+                this.passChanged = true;
+                this.$emit("passChanged", true);
+                })
+            .catch(e => {
+                this.$emit("dbError", e);
+            });
             }
         }
+    }
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
