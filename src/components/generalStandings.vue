@@ -26,11 +26,13 @@ export default{
         this.widgetData.tableLoadingSpinner = true;
          this.$emit("standingsReady", false);
          const jwt = localStorage.getItem("jwt");
+         const leagueId = localStorage.getItem("leagueId");
          const options = {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
-            'auth-token' : jwt
+            'auth-token' : jwt,
+            "league-id" : leagueId
         }};
         this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/standings", options)
         .then( standings =>{

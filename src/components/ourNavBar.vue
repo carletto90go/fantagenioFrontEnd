@@ -24,10 +24,11 @@
                                 </b-nav-item-dropdown> 
                         </b-nav>
             <!-- </b-card> -->
-            <betComponent v-if="betActive" @betReady="betReady" @dbError="handlerDbError"/>
-            <standingsComponent v-if="standingsActive" @standingsReady="betReady" @dbError="handlerDbError"/>
-            <precComponent v-if="precActive" @lastGameReady="betReady" @dbError="handlerDbError"/>
+            <betComponent v-if="betActive" @isLeagueId="isLeagueId" @betReady="betReady" @dbError="handlerDbError"/>
+            <standingsComponent v-if="standingsActive" @isLeagueId="isLeagueId" @standingsReady="betReady" @dbError="handlerDbError"/>
+            <precComponent v-if="precActive" @isLeagueId="isLeagueId" @lastGameReady="betReady" @dbError="handlerDbError"/>
             <changePwdComponent v-if="changePwdActive" @passChanged="betReady" @dbError="handlerDbError"/>
+            <selectLeagueComponent v-if="selectLeagueActive" @dbError="handlerDbError"/>
             <b-button pill block size="lg" class="buttonServer" variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
@@ -37,16 +38,18 @@ import betComponent from './bet.vue';
 import standingsComponent from './generalStandings.vue';
 import precComponent from './lastGame.vue';
 import changePwdComponent from './changePwd.vue';
+import selectLeagueComponent from './selectLeague.vue';
 
 export default {
     name: 'ourNavBar',
     data(){
                 return {
                     showButton : true,
-                    betActive : true,
+                    betActive : false,
                     precActive: false,
                     standingsActive: false,
                     changePwdActive : false,
+                    selectLeagueActive : true,
                     dbError: false,
                     username:""
                 };
@@ -55,13 +58,19 @@ export default {
             betComponent,
             standingsComponent,
             precComponent,
-            changePwdComponent
+            changePwdComponent,
+            selectLeagueComponent
         },
     mounted(){
         if(!localStorage.getItem("jwt"))
             this.$router.push({ name: "login" });
             else{
                 this.username = localStorage.getItem("username");
+            }
+
+        if(localStorage.getItem("leagueId")){
+            this.betActive = true;
+            this.selectLeagueActive = false;
             }
            },
     methods: {
@@ -76,6 +85,7 @@ export default {
             this.precActive = false;
             this.standingsActive = false;
             this.changePwdActive = false;
+            this.selectLeagueActive = false;
             },
         clickPrec() {
             if(!this.precActive) this.showButton = false;
@@ -83,6 +93,7 @@ export default {
             this.precActive = true;
             this.standingsActive = false;
             this.changePwdActive = false;
+            this.selectLeagueActive = false;
             },
         clickStandings() {
             if(!this.standingsActive) this.showButton = false;
@@ -90,6 +101,7 @@ export default {
             this.precActive = false;
             this.standingsActive = true;
             this.changePwdActive = false;
+            this.selectLeagueActive = false;
             },
         clickChangePwd() {
             if(!this.clickChangePwd) this.showButton = false;
@@ -97,6 +109,7 @@ export default {
             this.precActive = false;
             this.standingsActive = false;
             this.changePwdActive = true;
+            this.selectLeagueActive = false;
         },
         betReady(dataFun){
             this.dbError = false;
@@ -116,6 +129,13 @@ export default {
             console.log("refreshing...");
             this.betActive = true;
             this.dbError = false;
+        },
+        isLeagueId( val ){
+            if(!val) this.selectLeagueActive = true;
+            this.betActive = false;
+            this.precActive = false;
+            this.standingsActive = false;
+            this.changePwdActive = false;
         }
     }
 }

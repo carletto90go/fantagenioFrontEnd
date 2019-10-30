@@ -64,7 +64,9 @@ export default {
             }
         }
     },
+
     mounted(){
+        localStorage.setItem("leagueId", 1);
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
@@ -80,11 +82,13 @@ export default {
             .then( responseMatch => {
                 let teams = responseMatch.data.events;
                 const jwt = localStorage.getItem("jwt");
+                const leagueId = localStorage.getItem("leagueId");
                 const hiddenOptions = {
                     method: 'GET',
                     headers: {
                     'Content-Type': 'application/json',
-                    'auth-token' : jwt
+                    'auth-token' : jwt,
+                    "league-id" : leagueId
                     }};
                 this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
@@ -179,12 +183,14 @@ export default {
                     }
                 }
             const jwt = localStorage.getItem("jwt");
+            const leagueId = localStorage.getItem("leagueId");
             const options = {
                 method: 'POST',
                 headers: {
                     'Access-Control-Allow-Origin' : '*',
                     'Content-Type': 'application/json',
-                    'auth-token' : jwt
+                    'auth-token' : jwt,
+                    "league-id" : leagueId
                     }
             };
             return this.axios.post( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/matches", this.sendMatchesData.postMatches, options)
