@@ -58,6 +58,7 @@ export default {
                 templatePostMatches : [{},{},{},{},{},{},{},{},{},{}],
             },
             tableData: {
+                started : false,
                 round: null,
                 items: tableItems,
                 fields: tableFields
@@ -65,6 +66,7 @@ export default {
         }
     },
     mounted(){
+        //da rivedere started match
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
@@ -75,9 +77,27 @@ export default {
         }};
         this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
         .then( responseNextMatch => {
+
             this.tableData.round = responseNextMatch.data.events[0].intRound;
+
             this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.tableData.round+"&s=1920", options)
             .then( responseMatch => {
+                //Ordino l'array per essere sicuro che il primo sia il primo in ordine temporale
+                responseMatch.data.events.sort( function(a,b){
+                    let matchDateA = new Date(a.dateEvent + "T" + a.strTime);
+                    let matchDateB = new Date(b.dateEvent + "T" + b.strTime);
+                    matchDateA = matchDateA.getTime();
+                    matchDateB = matchDateB.getTime();
+                    return matchDateA - matchDateB;
+                    });
+
+                //Vedo se i match sono iniziati
+                let matchDateTS = new Date(responseMatch.data.events[0].dateEvent + "T" + responseMatch.data.events[0].strTime);
+                matchDateTS = matchDateTS.getTime();
+                let currentDateTS = Date.now();
+                if(matchDateTS<currentDateTS)
+                    this.tableData.started = true;
+
                 let teams = responseMatch.data.events;
                 const jwt = localStorage.getItem("jwt");
                 const leagueId = localStorage.getItem("leagueId");
@@ -123,10 +143,10 @@ export default {
                                 }
                         }
                         matchDateTS = matchDateTS.getTime();
-                        let currentDateTS = Date.now();
-                        if(matchDateTS<currentDateTS) {
-                            tableItem.started = true;
-                        }
+                        //let currentDateTS = Date.now();
+                        //if(matchDateTS<currentDateTS)
+                        tableItem.started = this.tableData.started;
+
                         tableItems.push(tableItem);
 
                         this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
