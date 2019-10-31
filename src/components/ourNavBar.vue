@@ -17,18 +17,20 @@
                                     </template>
                                     <b-dropdown-item >                        
                                         <b-button v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-button>
+                                        <b-button v-if="showButton" v-on:click="clickSelectLeague">SELEZIONA LEGA</b-button>
                                         <b-button v-if="!showButton" disabled>CAMBIA PASSWORD</b-button>
+                                        <b-button v-if="!showButton" disabled>SELEZIONA LEGA</b-button>
                                     </b-dropdown-item>
                                     <b-dropdown-item><b-button type="button" variant="danger" v-on:click="logout()" >DISCONNETTI</b-button>
                                     </b-dropdown-item>
                                 </b-nav-item-dropdown> 
                         </b-nav>
             <!-- </b-card> -->
-            <betComponent v-if="betActive" @isLeagueId="isLeagueId" @betReady="betReady" @dbError="handlerDbError"/>
-            <standingsComponent v-if="standingsActive" @isLeagueId="isLeagueId" @standingsReady="betReady" @dbError="handlerDbError"/>
-            <precComponent v-if="precActive" @isLeagueId="isLeagueId" @lastGameReady="betReady" @dbError="handlerDbError"/>
-            <changePwdComponent v-if="changePwdActive" @passChanged="betReady" @dbError="handlerDbError"/>
-            <selectLeagueComponent v-if="selectLeagueActive" @dbError="handlerDbError"/>
+            <betComponent v-if="betActive"  @betReady="betReady" @dbError="handlerDbError"/>
+            <standingsComponent v-if="standingsActive"  @standingsReady="betReady" @dbError="handlerDbError"/>
+            <precComponent v-if="precActive"  @lastGameReady="betReady" @dbError="handlerDbError"/>
+            <changePwdComponent v-if="changePwdActive" @betReady="betReady" @passChanged="betReady" @dbError="handlerDbError"/>
+            <selectLeagueComponent v-if="selectLeagueActive" @betReady="betReady" @changedLeague="clickScommessa" @dbError="handlerDbError"/>
             <b-button pill block size="lg" class="buttonServer" variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
@@ -45,11 +47,11 @@ export default {
     data(){
                 return {
                     showButton : true,
-                    betActive : false,
+                    betActive : true,
                     precActive: false,
                     standingsActive: false,
                     changePwdActive : false,
-                    selectLeagueActive : true,
+                    selectLeagueActive : false,
                     dbError: false,
                     username:""
                 };
@@ -67,16 +69,12 @@ export default {
             else{
                 this.username = localStorage.getItem("username");
             }
-
-        if(localStorage.getItem("leagueId")){
-            this.betActive = true;
-            this.selectLeagueActive = false;
-            }
            },
     methods: {
         logout: function() {
             localStorage.removeItem("jwt");
             localStorage.removeItem("username");
+            localStorage.removeItem("leagueId");
             this.$router.push({ name: "login" });
             },
         clickScommessa() {
@@ -104,12 +102,20 @@ export default {
             this.selectLeagueActive = false;
             },
         clickChangePwd() {
-            if(!this.clickChangePwd) this.showButton = false;
+            if(!this.changePwdActive) this.showButton = false;
             this.betActive = false;
             this.precActive = false;
             this.standingsActive = false;
             this.changePwdActive = true;
             this.selectLeagueActive = false;
+        },
+        clickSelectLeague() {
+            if(!this.selectLeagueActive) this.showButton = false;
+            this.betActive = false;
+            this.precActive = false;
+            this.standingsActive = false;
+            this.changePwdActive = false;
+            this.selectLeagueActive = true;
         },
         betReady(dataFun){
             this.dbError = false;
@@ -129,13 +135,6 @@ export default {
             console.log("refreshing...");
             this.betActive = true;
             this.dbError = false;
-        },
-        isLeagueId( val ){
-            if(!val) this.selectLeagueActive = true;
-            this.betActive = false;
-            this.precActive = false;
-            this.standingsActive = false;
-            this.changePwdActive = false;
         }
     }
 }

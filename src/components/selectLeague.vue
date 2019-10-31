@@ -1,7 +1,7 @@
 <template>
     <div id="selectLeague">
         <div>
-            <b-button v-for="i in myLeagues" :key="i.leagueId" v-on:click="sendMatches(i.leagueId)">{{i.league.leagueName}}</b-button>
+            <b-button v-for="i in myLeagues" :key="i.leagueId" v-on:click="updateLeagueId(i.leagueId)">{{i.league.leagueName}}</b-button>
         </div>
     </div>
 </template>
@@ -28,6 +28,7 @@
                 leagues.data.request.forEach( league => {
                     this.myLeagues.push(league);
                 });
+                this.$emit("betReady", true);
             })
             .catch(e => {
                 this.$emit("dbError", e);
@@ -35,8 +36,9 @@
 
         },
         methods: {
-            sendMatches(i){
-                console.log(i);
+            updateLeagueId(i){
+                localStorage.setItem("leagueId", i);
+                this.$emit("changedLeague", true);
             }
         }
     }

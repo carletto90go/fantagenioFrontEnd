@@ -66,7 +66,6 @@ export default {
     },
 
     mounted(){
-        localStorage.setItem("leagueId", 1);
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
         //controllo eventuali scommesse già inserite
