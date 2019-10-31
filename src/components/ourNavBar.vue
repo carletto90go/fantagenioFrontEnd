@@ -17,8 +17,10 @@
                                     </template>
                                     <b-dropdown-item >                        
                                         <b-button v-if="showButton" v-on:click="clickChangePwd">CAMBIA PASSWORD</b-button>
-                                        <b-button v-if="showButton" v-on:click="clickSelectLeague">SELEZIONA LEGA</b-button>
                                         <b-button v-if="!showButton" disabled>CAMBIA PASSWORD</b-button>
+                                    </b-dropdown-item>
+                                    <b-dropdown-item >
+                                        <b-button v-if="showButton" v-on:click="clickSelectLeague">SELEZIONA LEGA</b-button>
                                         <b-button v-if="!showButton" disabled>SELEZIONA LEGA</b-button>
                                     </b-dropdown-item>
                                     <b-dropdown-item><b-button type="button" variant="danger" v-on:click="logout()" >DISCONNETTI</b-button>
