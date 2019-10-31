@@ -3,10 +3,10 @@
         <b-table class="Standings" head-variant="light" v-if="!widgetData.tableLoadingSpinner" id="table"  small dark striped hover responsive :items="tableDataStandings.items" :fields="tableDataStandings.fields">
          <template v-slot:cell(index)="data">
                 {{ data.index + 1 }}
-         </template>   
+         </template>
         </b-table>
         <b-spinner class="text-center" v-if="widgetData.tableLoadingSpinner" variant="success" label="Spinningg" ></b-spinner>
-    </div>    
+    </div>
 </template>
 <script>
 export default{
@@ -39,7 +39,7 @@ export default{
             standings.data.response.sort( function(a,b){ return b.points - a.points } );
             for(let i =0; i<standings.data.response.length; i++) {
                 let tableItem = {
-                    "giocatore": standings.data.response[i].utente.username.toUpperCase(),
+                    "giocatore": standings.data.response[i].user.username.toUpperCase(),
                     "punti": standings.data.response[i].points,
                     }
                 tableItems.push(tableItem);
@@ -50,7 +50,6 @@ export default{
         .catch( e =>{
             this.$emit("dbError", e);
         });
-            
     },
      beforeDestroy(){
         this.tableDataStandings.items = null;
@@ -80,5 +79,4 @@ let tableFields = [
 .Standings{
     box-shadow: 0 14px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
 </style>

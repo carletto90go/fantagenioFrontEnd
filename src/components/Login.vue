@@ -35,13 +35,11 @@
                 }
             }
         },
-
         mounted() {
             if(localStorage.getItem("jwt"))
                 this.$router.push({ name : "ourNavBar" });
         },
         methods: {
-
             login() {
                 this.input.showAlert = false;
                 this.input.showAlertGenerico = false;
@@ -56,7 +54,6 @@
                             password: this.input.password
                         }
                     })
-
                     .then( response => {
                         localStorage.setItem("username", response.data.response.username);
                         localStorage.setItem("jwt", response.data.response.jwt);

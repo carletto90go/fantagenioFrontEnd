@@ -28,7 +28,6 @@ export default {
             passChanged : false
             }
         },
-
     mounted() {
         this.$emit("betReady", true);
         if(!localStorage.getItem("jwt"))
