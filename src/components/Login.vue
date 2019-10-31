@@ -60,6 +60,7 @@
                     .then( response => {
                         localStorage.setItem("username", response.data.response.username);
                         localStorage.setItem("jwt", response.data.response.jwt);
+                        localStorage.setItem("leagueId", 1);
                         this.$router.push({ name: "ourNavBar" });
                     })
                     .catch( function (error) {

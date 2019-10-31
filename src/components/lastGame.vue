@@ -53,7 +53,6 @@ export default{
             this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/users", options)
             .then( users => {
                 users.data.response.forEach( user => {
-                    console.log(user);
                     this.select.user = resultLastGame.data.response[0].utente; //utente loggato da myPred
                     this.select.optionsUserId.push({ username : user.utente.username, userId : user.userId });
                     this.select.optionsUser.push(user.utente.username);
