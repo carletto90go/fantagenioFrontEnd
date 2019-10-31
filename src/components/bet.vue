@@ -64,7 +64,6 @@ export default {
             }
         }
     },
-
     mounted(){
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
@@ -153,7 +152,6 @@ export default {
         tableItems = [];
         //if(tableFields.length == 5) tableFields.pop();
     },
-
     methods: {
         input1x2Fun: function(dataFun){
           this.sendMatchesData.bet1x2[dataFun.index] = dataFun.inputBet;

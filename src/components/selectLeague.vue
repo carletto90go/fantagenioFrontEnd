@@ -14,7 +14,6 @@
                 myLeagues : []
             }
         },
-
         mounted() {
             const jwt = localStorage.getItem("jwt");
             const options = {
@@ -33,7 +32,6 @@
             .catch(e => {
                 this.$emit("dbError", e);
             });
-
         },
         methods: {
             updateLeagueId(i){
