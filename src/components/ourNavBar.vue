@@ -28,11 +28,11 @@
                                 </b-nav-item-dropdown> 
                         </b-nav>
             <!-- </b-card> -->
-            <betComponent v-if="betActive"  @betReady="betReady" @dbError="handlerDbError"/>
-            <standingsComponent v-if="standingsActive"  @standingsReady="betReady" @dbError="handlerDbError"/>
-            <precComponent v-if="precActive"  @lastGameReady="betReady" @dbError="handlerDbError"/>
-            <changePwdComponent v-if="changePwdActive" @betReady="betReady" @passChanged="betReady" @dbError="handlerDbError"/>
-            <selectLeagueComponent v-if="selectLeagueActive" @betReady="betReady" @changedLeague="clickScommessa" @dbError="handlerDbError"/>
+            <betComponent v-if="activeComponent.betActive"  @betReady="betReady" @dbError="handlerDbError"/>
+            <standingsComponent v-if="activeComponent.standingsActive"  @standingsReady="betReady" @dbError="handlerDbError"/>
+            <precComponent v-if="activeComponent.precActive"  @lastGameReady="betReady" @dbError="handlerDbError"/>
+            <changePwdComponent v-if="activeComponent.changePwdActive" @betReady="betReady" @passChanged="betReady" @dbError="handlerDbError"/>
+            <selectLeagueComponent v-if="activeComponent.selectLeagueActive" @betReady="betReady" @changedLeague="clickScommessa" @dbError="handlerDbError"/>
             <b-button pill block size="lg" class="buttonServer" variant="danger" v-if="dbError" type="button" v-on:click="refresh">Riprova, Problema server!</b-button>
     </div>
 </template>
@@ -47,17 +47,24 @@ import selectLeagueComponent from './selectLeague.vue';
 export default {
     name: 'ourNavBar',
     data(){
-                return {
-                    showButton : true,
-                    betActive : true,
-                    precActive: false,
-                    standingsActive: false,
-                    changePwdActive : false,
-                    selectLeagueActive : false,
-                    dbError: false,
-                    username:""
-                };
-        },
+        return {
+            activeComponent : {
+                 "betActive" : true ,
+                 "precActive" : false ,
+                 "standingsActive" : false ,
+                 "changePwdActive" : false ,
+                 "selectLeagueActive" : false,
+                },
+            showButton : true,
+            betActive : true,
+            precActive: false,
+            standingsActive: false,
+            changePwdActive : false,
+            selectLeagueActive : false,
+            dbError: false,
+            username:""
+        };
+    },
         components: {
             betComponent,
             standingsComponent,
@@ -81,43 +88,23 @@ export default {
             },
         clickScommessa() {
             if(!this.betActive) this.showButton = false;
-            this.betActive = true;
-            this.precActive = false;
-            this.standingsActive = false;
-            this.changePwdActive = false;
-            this.selectLeagueActive = false;
+            this.switchComponent("betActive");
             },
         clickPrec() {
             if(!this.precActive) this.showButton = false;
-            this.betActive = false;
-            this.precActive = true;
-            this.standingsActive = false;
-            this.changePwdActive = false;
-            this.selectLeagueActive = false;
+            this.switchComponent("precActive");
             },
         clickStandings() {
             if(!this.standingsActive) this.showButton = false;
-            this.betActive = false;
-            this.precActive = false;
-            this.standingsActive = true;
-            this.changePwdActive = false;
-            this.selectLeagueActive = false;
+            this.switchComponent("standingsActive");
             },
         clickChangePwd() {
             if(!this.changePwdActive) this.showButton = false;
-            this.betActive = false;
-            this.precActive = false;
-            this.standingsActive = false;
-            this.changePwdActive = true;
-            this.selectLeagueActive = false;
+            this.switchComponent("changePwdActive");
         },
         clickSelectLeague() {
             if(!this.selectLeagueActive) this.showButton = false;
-            this.betActive = false;
-            this.precActive = false;
-            this.standingsActive = false;
-            this.changePwdActive = false;
-            this.selectLeagueActive = true;
+            this.switchComponent("selectLeagueActive");
         },
         betReady(dataFun){
             this.dbError = false;
@@ -125,19 +112,19 @@ export default {
             },
         handlerDbError(error){
             this.dbError = true;
-            if(this.betActive) return this.betActive = false;
-            if(this.standingsActive) return this.standingsActive = false;
-            if(this.precActive) return this.precActive = false;
-            if(this.changePwdActive) return this.changePwdActive = false;
-            // eslint-disable-next-line
-            console.log(error);
         },
         refresh(){
-            // eslint-disable-next-line
-            console.log("refreshing...");
-            this.betActive = true;
+            this.switchComponent("betActive");
             this.dbError = false;
-        }
+        },
+        switchComponent(activeCpt){ //switch to activeCpt component
+            this.activeComponent["betActive"] = false;
+            this.activeComponent["standingsActive"] = false;
+            this.activeComponent["precActive"] = false;
+            this.activeComponent["changePwdActive"] = false;
+            this.activeComponent["selectLeagueActive"] = false;
+            this.activeComponent[activeCpt] = true;
+            }
     }
 }
 </script>
