@@ -69,16 +69,26 @@ export default {
         //da rivedere started match
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
+        const jwt = localStorage.getItem("jwt");
+        const leagueId = localStorage.getItem("leagueId");
+        const hiddenOptions = {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json',
+            'auth-token' : jwt,
+            "league-id" : leagueId
+            }};
         //controllo eventuali scommesse già inserite
         const options = {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json'
         }};
-        this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
-        .then( responseNextMatch => {
+        //this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
+        this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/currentRound", hiddenOptions)
+        .then( resCurrentRound => {
 
-            this.tableData.round = responseNextMatch.data.events[0].intRound;
+            this.tableData.round = resCurrentRound.data + 1;
 
             this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.tableData.round+"&s=1920", options)
             .then( responseMatch => {
@@ -99,15 +109,6 @@ export default {
                     this.tableData.started = true;
 
                 let teams = responseMatch.data.events;
-                const jwt = localStorage.getItem("jwt");
-                const leagueId = localStorage.getItem("leagueId");
-                const hiddenOptions = {
-                    method: 'GET',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    'auth-token' : jwt,
-                    "league-id" : leagueId
-                    }};
                 this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
                     let predArray = myPred.data.response;

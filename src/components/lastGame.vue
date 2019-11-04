@@ -47,13 +47,13 @@ export default{
         }};
         this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction", options)
         .then( resultLastGame =>{
-            this.select.round = resultLastGame.data.response[0].round;
+            this.select.round = resultLastGame.data.round;
             for(let i = 1; i<=this.select.round; i++) this.select.optionsRound.push(i);
 
             this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/users", options)
             .then( users => {
                 users.data.response.forEach( user => {
-                    this.select.user = resultLastGame.data.response[0].user.username; //utente loggato da myPred
+                    this.select.user = localStorage.getItem("username"); //utente loggato da myPred
                     this.select.optionsUserId.push({ username : user.user.username, userId : user.userId });
                     this.select.optionsUser.push(user.user.username);
                 });
