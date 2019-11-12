@@ -32,6 +32,7 @@
 import inputComp1x2 from './input1X2.vue';
 import inputCompCorrectResult from './inputCorrectResult.vue';
 
+
 export default {
     name: 'bet',
     components: {
@@ -58,6 +59,7 @@ export default {
                 templatePostMatches : [{},{},{},{},{},{},{},{},{},{}],
             },
             tableData: {
+                started : false,
                 round: null,
                 items: tableItems,
                 fields: tableFields
@@ -65,27 +67,49 @@ export default {
         }
     },
     mounted(){
+        //da rivedere started match
         this.$emit("betReady", false);
         this.widgetData.tableLoadingSpinner = true;
+        const jwt = localStorage.getItem("jwt");
+        const leagueId = localStorage.getItem("leagueId");
+        const hiddenOptions = {
+            method: 'GET',
+            headers: {
+            'Content-Type': 'application/json',
+            'auth-token' : jwt,
+            "league-id" : leagueId
+            }};
         //controllo eventuali scommesse già inserite
         const options = {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json'
         }};
-        this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
-        .then( responseNextMatch => {
-            this.tableData.round = responseNextMatch.data.events[0].intRound;
+        //this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id=4332", options)
+        this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/currentRound", hiddenOptions)
+        .then( resCurrentRound => {
+
+            this.tableData.round = resCurrentRound.data + 1;
+
             this.axios.get("https://www.thesportsdb.com/api/v1/json/1/eventsround.php?id=4332&r="+this.tableData.round+"&s=1920", options)
             .then( responseMatch => {
+                //Ordino l'array per essere sicuro che il primo sia il primo in ordine temporale
+                responseMatch.data.events.sort( function(a,b){
+                    let matchDateA = new Date(a.dateEvent + "T" + a.strTime);
+                    let matchDateB = new Date(b.dateEvent + "T" + b.strTime);
+                    matchDateA = matchDateA.getTime();
+                    matchDateB = matchDateB.getTime();
+                    return matchDateA - matchDateB;
+                    });
+
+                //Vedo se i match sono iniziati
+                let matchDateTS = new Date(responseMatch.data.events[0].dateEvent + "T" + responseMatch.data.events[0].strTime);
+                matchDateTS = matchDateTS.getTime();
+                let currentDateTS = Date.now();
+                if(matchDateTS<currentDateTS)
+                    this.tableData.started = true;
+
                 let teams = responseMatch.data.events;
-                const jwt = localStorage.getItem("jwt");
-                const hiddenOptions = {
-                    method: 'GET',
-                    headers: {
-                    'Content-Type': 'application/json',
-                    'auth-token' : jwt
-                    }};
                 this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction?round=" + this.tableData.round, hiddenOptions)
                 .then( myPred => {
                     let predArray = myPred.data.response;
@@ -121,10 +145,10 @@ export default {
                                 }
                         }
                         matchDateTS = matchDateTS.getTime();
-                        let currentDateTS = Date.now();
-                        if(matchDateTS<currentDateTS) {
-                            tableItem.started = true;
-                        }
+                        //let currentDateTS = Date.now();
+                        //if(matchDateTS<currentDateTS)
+                        tableItem.started = this.tableData.started;
+
                         tableItems.push(tableItem);
 
                         this.sendMatchesData.templatePostMatches[i].idMatch = teams[i].idEvent;
@@ -150,7 +174,6 @@ export default {
         tableItems = [];
         //if(tableFields.length == 5) tableFields.pop();
     },
-
     methods: {
         input1x2Fun: function(dataFun){
           this.sendMatchesData.bet1x2[dataFun.index] = dataFun.inputBet;
@@ -179,12 +202,14 @@ export default {
                     }
                 }
             const jwt = localStorage.getItem("jwt");
+            const leagueId = localStorage.getItem("leagueId");
             const options = {
                 method: 'POST',
                 headers: {
                     'Access-Control-Allow-Origin' : '*',
                     'Content-Type': 'application/json',
-                    'auth-token' : jwt
+                    'auth-token' : jwt,
+                    "league-id" : leagueId
                     }
             };
             return this.axios.post( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/matches", this.sendMatchesData.postMatches, options)

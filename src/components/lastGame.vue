@@ -37,22 +37,24 @@ export default{
         this.$emit("lastGameReady", false);
         this.widgetData.tableLoadingSpinner = true;
         const jwt = localStorage.getItem("jwt");
-         const options = {
+        const leagueId = localStorage.getItem("leagueId");
+        const options = {
             method: 'GET',
             headers: {
             'Content-Type': 'application/json',
-            'auth-token' : jwt
+            'auth-token' : jwt,
+            "league-id" : leagueId
         }};
         this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/myPrediction", options)
         .then( resultLastGame =>{
-            this.select.round = resultLastGame.data.response[0].round;
-            for(let i = 1; i<=this.select.round+1; i++) this.select.optionsRound.push(i);
+            this.select.round = resultLastGame.data.round;
+            for(let i = 1; i<=this.select.round; i++) this.select.optionsRound.push(i);
 
             this.axios.get( process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/users", options)
             .then( users => {
                 users.data.response.forEach( user => {
-                    this.select.user = resultLastGame.data.response[0].utente; //utente loggato da myPred
-                    this.select.optionsUserId.push({ username : user.username, userId : user.id });
+                    this.select.user = localStorage.getItem("username"); //utente loggato da myPred
+                    this.select.optionsUserId.push({ username : user.username, userId : user.userId });
                     this.select.optionsUser.push(user.username);
                 });
             });
@@ -68,7 +70,7 @@ export default{
                         "match": theSportsDb.data.events[i].strEvent,
                         "resultCorrect": theSportsDb.data.events[i].intHomeScore + " - " + theSportsDb.data.events[i].intAwayScore
                         }
-                    resultLastGame.data.response.forEach( match => {
+                    if(resultLastGame) resultLastGame.data.response.forEach( match => {
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
                             if(match.bet1x2 != 3){ tableItem.bet1x2 = match.bet1x2; }
@@ -119,11 +121,13 @@ export default{
             this.$emit("lastGameReady", false);
             this.widgetData.tableLoadingSpinner = true;
             const jwt = localStorage.getItem("jwt");
+            const leagueId = localStorage.getItem("leagueId");
             const options = {
                 method: 'GET',
                 headers: {
                 'Content-Type': 'application/json',
-                'auth-token' : jwt
+                'auth-token' : jwt,
+                "league-id" : leagueId
             }};
             this.axios.get(process.env.VUE_APP_ENVIRONMENT_SECRET + "api/user/prediction/"+user+"?round="+round, options)
             .then( resultLastGame =>{
@@ -139,7 +143,7 @@ export default{
                         "match": theSportsDb.data.events[i].strEvent,
                         "resultCorrect": theSportsDb.data.events[i].intHomeScore + " - " + theSportsDb.data.events[i].intAwayScore
                         }
-                        resultLastGame.data.response.forEach( match => {
+                        if(resultLastGame.data.response) resultLastGame.data.response.forEach( match => {
                             if(match.idMatch == theSportsDb.data.events[i].idEvent){
                                 tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
                                 if(match.bet1x2 != 3) { tableItem.bet1x2 = match.bet1x2; }

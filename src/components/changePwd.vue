@@ -28,8 +28,8 @@ export default {
             passChanged : false
             }
         },
-
     mounted() {
+        this.$emit("betReady", true);
         if(!localStorage.getItem("jwt"))
             this.$router.push({ name: "login" });
     },

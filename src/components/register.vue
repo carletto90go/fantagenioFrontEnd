@@ -1,18 +1,16 @@
 <template>
-    <div id="login">
+    <div id="register">
         <div class="text-center">
             <b-alert variant="danger"  label="Text Centered" :show="input.showAlert">USERNAME O PASSWORD ERRATI!!!</b-alert>
-            <b-alert variant="danger"  label="Text Centered" :show="input.showAlertGenerico">ERRORE CONNESSIONE! CONTATTA HELPDESK</b-alert>
         </div>
         <div class="form" >
-            <b-form>       
-            <b-img class="img" center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>    
-            <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="Inserisci username"></b-input>
+            <b-form>
+            <b-img class="img" center src="../assets/logoCompleto.jpg" fluid alt="Responsive image"></b-img>
+            <b-input type="text" size="lg" name="username" v-model="input.username" placeholder="username"></b-input>
+            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Password"></b-input>
+            <b-input type="password" name="repeatPassword" size="lg" v-model="input.repeatPassword" placeholder="Ripeti password"></b-input>
 
-            <b-input type="password" name="password" size="lg" v-model="input.password" placeholder="Inserisci password"></b-input>
-
-            <b-button v-if="!input.spinner" type="submit" size="lg" v-on:click="login()">Accedi</b-button>
-            <b-button v-if="!input.spinner" type="button" size="lg" v-on:click="register()">REGISTRATI</b-button>
+            <b-button  v-if="!input.spinner" type="button" size="lg" v-on:click="register()">Registrati</b-button>
             </b-form>
         </div>
         <div class="text-center" v-if="input.spinner">
@@ -23,12 +21,13 @@
 
 <script>
   export default {
-        name: 'login',
+        name: 'register',
         data() {
             return {
                 input: {
                     username: "",
                     password: "",
+                    repeatPassword: "",
                     output: "",
                     showAlert: false,
                     spinner: false,
@@ -36,49 +35,31 @@
                 }
             }
         },
-        mounted() {
-            if(localStorage.getItem("jwt"))
-                this.$router.push({ name : "ourNavBar" });
-        },
         methods: {
-            login() {
-                this.input.showAlert = false;
-                this.input.showAlertGenerico = false;
-                if(this.input.username != "" && this.input.password != "") {
-                    let object = this;
+            register() {
+                if(this.input.password == this.input.repeatPassword){
                     this.input.spinner = true;
-                    this.visible = true
-                    this.axios.post( process.env.VUE_APP_ENVIRONMENT_SECRET + "login",
-                    {
-                        "request": {
-                            username: this.input.username,
-                            password: this.input.password
-                        }
-                    })
-                    .then( response => {
-                        localStorage.setItem("username", response.data.response.username);
-                        localStorage.setItem("jwt", response.data.response.jwt);
-                        localStorage.setItem("leagueId", 1);
-                        this.$router.push({ name: "ourNavBar" });
-                    })
-                    .catch( function (error) {
-                        if(error.response.status == 403) object.input.showAlert = true;
-                        else object.input.showAlertGenerico = true;
-                        object.input.spinner = false;
-                    });
-                } else {
-                  this.input.showAlertGenerico = true; //    console.log("The username and / or password is incorrect");
-                    }
-            },
-            register(){
-                this.$router.push({ name: "register" });
+                    this.axios.post(process.env.VUE_APP_ENVIRONMENT_SECRET + "register",
+                        {
+                            "request": {
+                                username: this.input.username,
+                                password: this.input.password
+                            }
+                        })
+                        .then( response => {
+                            this.$router.push({ name: "login" });
+                        })
+                        .catch( e => {console.log(e); });
+                }
+                 else console.log("Le password devono coincidere");
+                 }
+
             }
         }
-    }
 </script>
 <style scoped>
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
-.login-page {
+.register-page {
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
