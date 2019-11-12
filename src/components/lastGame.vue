@@ -54,8 +54,8 @@ export default{
             .then( users => {
                 users.data.response.forEach( user => {
                     this.select.user = localStorage.getItem("username"); //utente loggato da myPred
-                    this.select.optionsUserId.push({ username : user.user.username, userId : user.userId });
-                    this.select.optionsUser.push(user.user.username);
+                    this.select.optionsUserId.push({ username : user.username, userId : user.userId });
+                    this.select.optionsUser.push(user.username);
                 });
             });
             const optionsThe = {
@@ -70,7 +70,7 @@ export default{
                         "match": theSportsDb.data.events[i].strEvent,
                         "resultCorrect": theSportsDb.data.events[i].intHomeScore + " - " + theSportsDb.data.events[i].intAwayScore
                         }
-                    resultLastGame.data.response.forEach( match => {
+                    if(resultLastGame) resultLastGame.data.response.forEach( match => {
                         if(match.idMatch == theSportsDb.data.events[i].idEvent){
                             tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
                             if(match.bet1x2 != 3){ tableItem.bet1x2 = match.bet1x2; }
@@ -143,7 +143,7 @@ export default{
                         "match": theSportsDb.data.events[i].strEvent,
                         "resultCorrect": theSportsDb.data.events[i].intHomeScore + " - " + theSportsDb.data.events[i].intAwayScore
                         }
-                        resultLastGame.data.response.forEach( match => {
+                        if(resultLastGame.data.response) resultLastGame.data.response.forEach( match => {
                             if(match.idMatch == theSportsDb.data.events[i].idEvent){
                                 tableItem.betCR = match.homeGoals.toString() + " - " + match.awayGoals.toString();
                                 if(match.bet1x2 != 3) { tableItem.bet1x2 = match.bet1x2; }
