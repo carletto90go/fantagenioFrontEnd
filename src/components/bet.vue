@@ -32,6 +32,7 @@
 import inputComp1x2 from './input1X2.vue';
 import inputCompCorrectResult from './inputCorrectResult.vue';
 
+
 export default {
     name: 'bet',
     components: {
